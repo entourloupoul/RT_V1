@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 09:23:14 by pmasson           #+#    #+#             */
-/*   Updated: 2019/05/09 14:38:54 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/05/09 16:14:00 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ static int	rtv1_get_cam(t_scene *scene, char **nb, int *i, int shift)
 		ret = rtv1_atoi(nb[*i], &scene->cam->coord[*i + shift]);
 		*i = *i + 1;
 	}
+	scene->cam->length = 1024;
+	scene->cam->width = 768;
 	return (ret);
 }
 

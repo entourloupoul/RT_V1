@@ -6,7 +6,7 @@
 #    By: pmasson <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/07 18:54:45 by pmasson           #+#    #+#              #
-#    Updated: 2019/05/09 15:18:50 by pmasson          ###   ########.fr        #
+#    Updated: 2019/05/10 17:08:02 by pmasson          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,11 @@ CC			=		gcc -g
 
 CFLAG		=		-Wall -Werror -Wextra
 
-INCL		=		-I includes/ -I libft/includes/
+INCL		=		-I includes/ -I libft/includes/ -I ~/Library/Frameworks/SDL2.framework/Versions/A/Headers
+
+FRAMEWORK1	=		-F ~/Library/Frameworks/
+
+FRAMEWORK2	=		-framework SDL2
 
 RM			=		rm -f
 
@@ -35,14 +39,14 @@ LIB			=		libft/libft.a
 all			:		libft $(NAME)
 
 $(NAME)		:		$(OBJS) $(LIB) includes/rtv1.h
-					$(CC) $(CFLAG) $(INCL) $(OBJS) $(LIB) -o $(NAME)
+					$(CC) $(CFLAG) $(FRAMEWORK1) $(FRAMEWORK2) $(INCL) $(OBJS) $(LIB) -o $(NAME)
 
 libft		:		
 					@make -C libft/
 
 $(OBJSDIR)/%.o	:	$(SRCSDIR)/%.c includes/rtv1.h
 					@mkdir -p $(OBJSDIR)
-					$(CC) -c $(CFLAG) $(INCL) -c $< -o $@
+					$(CC) -c $(CFLAG) $(FRAMEWORK1) $(INCL) -c $< -o $@
 
 clean		:		
 					$(RM) $(OBJS)

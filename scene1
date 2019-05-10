@@ -1,0 +1,51 @@
+scene
+{
+	name=scene1
+	camera
+	{
+		t=100,233,435
+		r=0,0,0
+	}
+	light
+	{
+		t=122,-435,1000
+	}
+	light
+	{
+		t=23,45,67
+	}
+	shadows=off
+}
+objects
+{
+	sphere
+	{
+		name=sphere1
+		c=123,43,65
+		r=567
+		color=0xFF00FF
+		shining
+	}
+	plane
+	{
+		name=plane1
+		e=12,432,43,0
+		color=0xFF0000
+	}
+	cylinder
+	{
+		name=c1
+		c=12,34,56
+		a=12,4,5
+		l=34
+		r=23
+	}
+	cone
+	{
+		name=cone1
+		c=23,45,67
+		a=23,54,32
+		l=76
+		r=56
+	}
+}
