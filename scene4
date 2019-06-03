@@ -1,0 +1,11 @@
+scene
+name=test sphere plane
+camera
+t=0,-100,0
+light
+t=0,0,100
+objects
+plane
+name=plane1
+e=1,1,0,-40
+color=0xFF0000

@@ -6,7 +6,7 @@
 #    By: pmasson <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/07 18:54:45 by pmasson           #+#    #+#              #
-#    Updated: 2019/05/29 20:26:11 by pmasson          ###   ########.fr        #
+#    Updated: 2019/06/03 13:40:01 by pmasson          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,7 @@ OBJS		=		$(addprefix $(OBJSDIR)/, $(SRCS:.c=.o))
 
 CC			=		gcc -g
 
-CFLAG		=		-Wall -Werror -Wextra -fsanitize=address
+CFLAG		=		-Wall -Werror -Wextra
 
 INCL		=		-I includes/ -I libft/includes/ -I ~/Library/Frameworks/SDL2.framework/Versions/A/Headers
 

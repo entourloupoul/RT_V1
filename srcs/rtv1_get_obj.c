@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 13:27:16 by pmasson           #+#    #+#             */
-/*   Updated: 2019/05/29 21:36:14 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/06/03 14:47:32 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,6 +104,12 @@ int		rtv1_get_obj(t_scene *scene, char *line)
 			return (-1);
 		if (!(new->data = (int *)malloc(sizeof(int) * 8)))
 		{
+			free(new);
+			return (-1);
+		}
+		if (!(new->norm = (double *)malloc(sizeof(double) * 3)))
+		{
+			free(new->data);
 			free(new);
 			return (-1);
 		}

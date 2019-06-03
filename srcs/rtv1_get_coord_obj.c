@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 11:32:24 by pmasson           #+#    #+#             */
-/*   Updated: 2019/05/29 20:32:31 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/06/03 14:56:09 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,22 @@ static int	rtv1_get_coord_obj2(t_obj *obj, char **nb, int s)
 	return (1);
 }
 
+static void	rtv1_get_norm(t_obj *obj)
+{
+	double	length;
+
+	obj->norm[0] = (double)obj->data[0];
+	obj->norm[1] = (double)obj->data[1];
+	obj->norm[2] = (double)obj->data[2];
+	length = sqrt(obj->norm[0] * obj->norm[0] + obj->norm[1] * obj->norm[1]
+			+ obj->norm[2] * obj->norm[2]);
+	if (length == 0)
+		return ;
+	obj->norm[0] = obj->norm[0] / length;
+	obj->norm[1] = obj->norm[1] / length;
+	obj->norm[2] = obj->norm[2] / length;
+}
+
 int	rtv1_get_coord_obj(t_obj *obj, char *line)
 {
 	int		shift;
@@ -74,6 +90,8 @@ int	rtv1_get_coord_obj(t_obj *obj, char *line)
 		return (-1);
 	}
 	rtv1_free_tab(nb);
+	if (obj->type == 1)
+		rtv1_get_norm(obj);
 	return (1);
 }
 

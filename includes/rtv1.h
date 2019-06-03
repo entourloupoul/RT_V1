@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 13:39:26 by pmasson           #+#    #+#             */
-/*   Updated: 2019/05/29 21:36:12 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/06/03 14:44:23 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@ typedef	struct	s_obj
 	char	*name;
 	char	type;
 	int		*data;
+	double	*norm;
 	int		opt;
 	int		color;
 	struct s_obj	*next;
@@ -64,8 +65,8 @@ typedef	struct	s_scene
 }				t_scene;
 typedef struct	s_ray
 {
-	double	source[3];
-	double	vec[3];
+	double	source[6];
+	double	vec[6];
 	int		hits;
 	double	t;
 	double	ambient;
@@ -84,7 +85,7 @@ int		rtv1_create_final(t_scene *scene);
 int		rtv1_set_cam_vec(t_cam *cam);
 int		rtv1_set_cam_vec2(t_cam *cam);
 int		rtv1_get_color(t_scene *scene, t_ray *ray);
-double	rtv1_check_inter_sphere(t_obj *obj, t_ray *ray);
-double	rtv1_check_inter_plane(t_obj *obj, t_ray *ray);
+double	rtv1_check_inter_sphere(t_obj *obj, t_ray *ray, int s);
+double	rtv1_check_inter_plane(t_obj *obj, t_ray *ray, int s);
 int		rtv1_get_shade(t_scene *scene, t_obj *obj, t_ray *ray, t_obj *save);
 # endif

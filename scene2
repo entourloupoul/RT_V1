@@ -15,8 +15,16 @@ name=sphere2
 c=20,-10,0
 r=25
 color=0xFF0000
+sphere
+name=sphere3
+c=30,-10,40
+r=25
+color=0xFA6700
 plane
 name=plane1
 e=0,0,1,1
 color=0x0000FF
 plane
+name=plane2
+e=1,1,0,-40
+color=0x00FF00

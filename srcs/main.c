@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 13:40:40 by pmasson           #+#    #+#             */
-/*   Updated: 2019/05/24 17:45:48 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/06/03 14:58:59 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ static int	rtv1_put_on_screen(t_scene *scene)
 		return (rtv1_quit_video(scene, "Error, render copy\n", -1));
 	SDL_RenderPresent(scene->picture->renderer);
 	running = 1;
+//	return (0);
 	while (running == 1)
 	{
 		while (SDL_PollEvent(&event))
