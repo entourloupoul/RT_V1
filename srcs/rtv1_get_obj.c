@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 13:27:16 by pmasson           #+#    #+#             */
-/*   Updated: 2019/05/09 14:16:53 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/05/29 21:36:14 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "libft.h"
 #include <stdlib.h>
 
-static int	rtv1_get_color(t_obj *obj, char *line)
+static int	rtv1_get_color_obj(t_obj *obj, char *line)
 {
 	char *color;
 
@@ -48,7 +48,7 @@ static int	rtv1_fill_obj(t_obj *obj, char *line)
 	else if (ft_strcmp(line, "shining") == 0)
 		obj->opt = obj->opt | 32;
 	else if (ft_strncmp(line, "color=0x", 8) == 0)
-		return (rtv1_get_color(obj, line));
+		return (rtv1_get_color_obj(obj, line));
 	else
 		return (ft_msg_int(2, "Error, wrong term in objs.\n", -1));
 	return (1);
@@ -79,7 +79,8 @@ static void	rtv1_new_obj(t_obj *new, char *line)
 		new->data[i] = 0;
 		i++;
 	}
-	new->opt = 0;;
+	new->opt = 0;
+	new->name = NULL;
 	new->color = 0x000000;
 	if (ft_strcmp(line, "plane") == 0)
 		new->type = 1;

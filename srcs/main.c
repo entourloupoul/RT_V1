@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 13:40:40 by pmasson           #+#    #+#             */
-/*   Updated: 2019/05/10 17:05:36 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/05/24 17:45:48 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,15 +44,17 @@ static int	rtv1_create_window(t_scene *scene, t_picture *picture)
 	return (1);
 }
 
-static int	rtv1_quit_video(t_scene *scene)
+static int	rtv1_quit_video(t_scene *scene, char *str, int ret)
 {
-		SDL_DestroyWindow(scene->picture->window);
-		SDL_DestroyRenderer(scene->picture->renderer);
+	ft_putstr_fd(str, 2);
+	SDL_DestroyWindow(scene->picture->window);
+	SDL_DestroyRenderer(scene->picture->renderer);
+	if (scene->picture->texture != NULL)
 		SDL_DestroyTexture(scene->picture->texture);
-		SDL_FreeSurface(scene->picture->surface);
-		SDL_Quit();
-		free(scene->picture);
-		return (1);
+	SDL_FreeSurface(scene->picture->surface);
+	SDL_Quit();
+	free(scene->picture);
+	return (ret);
 }
 
 static int	rtv1_put_on_screen(t_scene *scene)
@@ -63,13 +65,11 @@ static int	rtv1_put_on_screen(t_scene *scene)
 	if (!(scene->picture->texture
 				= SDL_CreateTextureFromSurface(scene->picture->renderer,
 					scene->picture->surface)))
-	{
-		SDL_DestroyWindow(scene->picture->window);
-		SDL_DestroyRenderer(scene->picture->renderer);
-		SDL_FreeSurface(scene->picture->surface);
-		SDL_Quit();
-		return (ft_msg_int(2, "Error, failed create texture.\n", -1));
-	}
+		return (rtv1_quit_video(scene, "Error texture creation", -1));
+	if (SDL_RenderCopy(scene->picture->renderer,
+				scene->picture->texture, NULL, NULL) < 0)
+		return (rtv1_quit_video(scene, "Error, render copy\n", -1));
+	SDL_RenderPresent(scene->picture->renderer);
 	running = 1;
 	while (running == 1)
 	{
@@ -80,7 +80,7 @@ static int	rtv1_put_on_screen(t_scene *scene)
 				running = 0;
 		}
 	}
-	return (rtv1_quit_video(scene));
+	return (rtv1_quit_video(scene, NULL, 1));
 }
 
 
@@ -89,7 +89,7 @@ static int	rtv1_put_on_screen(t_scene *scene)
 static int	rtv1_create_scene(t_scene *scene)
 {
 	t_picture	*picture;
-	
+
 	if (!(picture = (t_picture *)malloc(sizeof(t_picture) * 1)))
 		return (ft_msg_int(2, "Error, failed malloc picture.\n", -1));
 	ft_bzero(picture, sizeof(t_picture));
@@ -98,8 +98,8 @@ static int	rtv1_create_scene(t_scene *scene)
 	scene->picture = picture;
 	if (rtv1_create_window(scene, picture) < 0)
 		return (-1);
-	//if (rtv1_create_final(scene) < 0)
-	//	return (-1);
+	if (rtv1_create_final(scene) < 0)
+		rtv1_quit_video(scene, NULL, -1);
 	if (rtv1_put_on_screen(scene) < 0)
 		return (-1);
 	return (1);
@@ -131,48 +131,5 @@ int	main(int argc, char **argv)
 	//prendre en compte les autres argv pour changement ou changement interatcif.
 	ret = rtv1_create_scene(scene);
 	rtv1_free_scene(&scene);
-	//close(avant aussi);;
-	/*
-	printf("%s\n", scene->name);
-	int i;
-	i = 0;
-	printf("cam: : ");
-	while (i < 6)
-	{
-		printf("%d ", scene->cam->coord[i]);
-		i++;
-	}
-	puts("");
-	t_light *tmp;
-	tmp = scene->light;
-	while (tmp != NULL)
-	{
-		printf("light : ");
-		i = 0;
-		while (i < 3)
-		{
-			printf("%d ", tmp->coord[i]);
-			i++;
-		}
-		puts("");
-		tmp = tmp->next;
-	}
-	t_obj *obj;
-	obj = scene->obj;
-	while (obj != NULL)
-	{
-		printf("name : %s\ntype: %d\ndata: ", obj->name, obj->type);
-		i = 0;
-		while (i < 8)
-		{
-			printf("%d ", obj->data[i]);
-			i++;
-		}
-		puts("");
-		printf("opt: %d\n", obj->opt);
-		printf("color: %X\n", obj->color);
-		obj = obj->next;
-	}
-	free(scene->cam->coord);*/
 	return (ret);
 }

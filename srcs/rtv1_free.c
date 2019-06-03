@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/06 14:17:25 by pmasson           #+#    #+#             */
-/*   Updated: 2019/05/09 14:15:55 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/05/29 21:18:18 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,9 @@ void	rtv1_free_light(t_light **light)
 	}
 }
 
-void	rtv1_free_cam(t_camera **cam)
+void	rtv1_free_cam(t_cam **cam)
 {
+	//free u v w
 	if (cam != NULL && *cam != NULL)
 	{
 		if ((*cam)->coord != NULL)

@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 09:23:14 by pmasson           #+#    #+#             */
-/*   Updated: 2019/05/09 16:14:00 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/05/24 18:40:31 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	rtv1_get_cam(t_scene *scene, char **nb, int *i, int shift)
 
 	if (scene->cam == NULL)
 	{
-		if (!(scene->cam = (t_camera *)malloc(sizeof(t_camera) * 1)))
+		if (!(scene->cam = (t_cam *)malloc(sizeof(t_cam) * 1)))
 			return (-1);
 		if (!(scene->cam->coord = (int *)malloc(sizeof(int) * 6)))
 		{
@@ -31,13 +31,16 @@ static int	rtv1_get_cam(t_scene *scene, char **nb, int *i, int shift)
 		}
 	}
 	ret = 1;
+	scene->cam->w = NULL;
+	scene->cam->u = NULL;
+	scene->cam->v = NULL;
 	while (ret == 1 && nb[*i] != NULL && *i < 3)
 	{
 		ret = rtv1_atoi(nb[*i], &scene->cam->coord[*i + shift]);
 		*i = *i + 1;
 	}
 	scene->cam->length = 1024;
-	scene->cam->width = 768;
+	scene->cam->width = 1024;
 	return (ret);
 }
 
@@ -136,5 +139,7 @@ int	rtv1_get_scene(t_scene *scene, int fd)
 		free(tmp);
 		free(line);
 	}
+	if (end < 0)
+		return (-1);
 	return (1);
 }

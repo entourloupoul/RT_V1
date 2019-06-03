@@ -1,0 +1,16 @@
+scene
+name=scene3
+camera
+t=0,-100,100
+light
+t=0,0,100
+objects
+sphere
+name=sphere1
+c=0,0,0
+r=25
+color=0xFF0000
+plane
+name=plane1
+e=0,0,1,10
+color=0x0000FF

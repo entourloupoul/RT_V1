@@ -3,7 +3,7 @@ scene
 	name=scene1
 	camera
 	{
-		t=100,233,435
+		t=100,233,0
 		r=0,0,0
 	}
 	light
