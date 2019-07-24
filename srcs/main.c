@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 13:40:40 by pmasson           #+#    #+#             */
-/*   Updated: 2019/06/11 15:05:15 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/07/24 13:15:17 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 static int	rtv1_create_window(t_scene *scene, t_picture *picture)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
-		return (ft_msg_int(2, "Error, failes init sdl2.\n"));
+		return (ft_msg_int(2, "Error, failes init sdl2.\n", -1));
 	if (!(picture->window = SDL_CreateWindow(scene->name, 0, 0,
 					picture->length, picture->width, 0)))
 	{

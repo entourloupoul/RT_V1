@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 18:56:40 by pmasson           #+#    #+#             */
-/*   Updated: 2019/06/03 14:57:58 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/07/11 14:20:42 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,12 +87,47 @@ static void	rtv1_shade_sphere(t_scene *scene, t_obj *obj, t_ray *ray)
 		ray->shade = 0;
 }
 
+/*
+//on cherche le point c ten que ac perpendiculaire a bc (a point du ray, b centre du cyl)
+*/
+
+static void	rtv1_shade_cylinder(t_scene *scene, t_obj *obj, t_ray *ray)
+{
+	double	norm[3];
+	double	length;
+	double	u;
+
+	(void)scene;
+	if ((u = sqrt(pow((double)obj->data[4], 2) + pow((double)obj->data[5], 2)
+					+ pow((double)obj->data[6], 2))) == 0)
+		return ;
+	length = ((double)obj->data[4] * (ray->source[3] - (double)obj->data[0])
+			+ (double)obj->data[5] * (ray->source[4] - (double)obj->data[1])
+			+ (double)obj->data[6] * (ray->source[5] - (double)obj->data[2]))
+			/ u;
+	norm[0] = ray->source[3] - (double)obj->data[0] + length * (double)obj->data[4];
+	norm[1] = ray->source[4] - (double)obj->data[1] + length * (double)obj->data[5];
+	norm[2] = ray->source[5] - (double)obj->data[2] + length * (double)obj->data[6];
+	length = sqrt(norm[0] * norm[0] + norm[1] * norm[1] + norm[2] * norm[2]);
+	if (length == 0)
+		return ;
+	norm[0] = norm[0] / length;
+	norm[1] = norm[1] / length;
+	norm[2] = norm[2] / length;
+	ray->shade = norm[0] * ray->vec[3] + norm[1] * ray->vec[4]
+		+ norm[2] * ray->vec[5];
+	if (ray->shade <= 0)
+		ray->shade = 0;
+}
+
 
 int	rtv1_get_shade(t_scene *scene, t_obj *obj, t_ray *ray, t_obj *save)
 {
 	ray->ambient = 0.2;
 	if (obj->type == 2)
 		rtv1_shade_sphere(scene, obj, ray);
+	if (obj->type == 3)
+		rtv1_shade_cylinder(scene, obj, ray);
 	else if (obj->type == 1)
 		rtv1_shade_plane(scene, obj, ray);
 	if (ray->t >= 0)
@@ -112,7 +147,6 @@ int	rtv1_get_shade(t_scene *scene, t_obj *obj, t_ray *ray, t_obj *save)
 			ray->shade = 0;
 		}
 	}
-	(void)save;
 	ray->color = ((int)round(((ray->color & 16711680) / 65536) * (ray->ambient
 		+ (1 - ray->ambient) * ray->shade) * 65536) & 16711680)
 		+ ((int)round(((ray->color & 65280) / 256) * (ray->ambient 
