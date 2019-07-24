@@ -66,7 +66,7 @@ static int	rtv1_get_color2(t_scene *scene, t_obj *obj,
 	save = NULL;
 	t = -1;
 	tmp = scene->obj;
-	while (tmp->next != NULL)
+	while (tmp != NULL && tmp->next != NULL)
 	{
 		if ((ret = rtv1_check_inter(tmp, ray, 3)) >= 0)
 		{
