@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 18:56:40 by pmasson           #+#    #+#             */
-/*   Updated: 2019/07/11 14:20:42 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/07/24 14:00:55 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,9 +105,9 @@ static void	rtv1_shade_cylinder(t_scene *scene, t_obj *obj, t_ray *ray)
 			+ (double)obj->data[5] * (ray->source[4] - (double)obj->data[1])
 			+ (double)obj->data[6] * (ray->source[5] - (double)obj->data[2]))
 			/ u;
-	norm[0] = ray->source[3] - (double)obj->data[0] + length * (double)obj->data[4];
-	norm[1] = ray->source[4] - (double)obj->data[1] + length * (double)obj->data[5];
-	norm[2] = ray->source[5] - (double)obj->data[2] + length * (double)obj->data[6];
+	norm[0] = ray->source[3] - ((double)obj->data[0] + length * (double)obj->data[4]);
+	norm[1] = ray->source[4] - ((double)obj->data[1] + length * (double)obj->data[5]);
+	norm[2] = ray->source[5] - ((double)obj->data[2] + length * (double)obj->data[6]);
 	length = sqrt(norm[0] * norm[0] + norm[1] * norm[1] + norm[2] * norm[2]);
 	if (length == 0)
 		return ;
