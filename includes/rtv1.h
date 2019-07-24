@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 13:39:26 by pmasson           #+#    #+#             */
-/*   Updated: 2019/06/03 14:44:23 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/07/11 13:07:49 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,15 @@ typedef struct	s_ray
 	double	shade;
 	int		color;
 }				t_ray;
+typedef struct	s_terms
+{
+	double	i;
+	double	j;
+	double	k;
+	double	l;
+	double	m;
+	double	n;
+}				t_terms;
 int		rtv1_get_scene(t_scene *scene, int fd);
 void	rtv1_free_tab(char **tab);
 int		rtv1_atoi(char *str, int *d);
@@ -88,4 +97,6 @@ int		rtv1_get_color(t_scene *scene, t_ray *ray);
 double	rtv1_check_inter_sphere(t_obj *obj, t_ray *ray, int s);
 double	rtv1_check_inter_plane(t_obj *obj, t_ray *ray, int s);
 int		rtv1_get_shade(t_scene *scene, t_obj *obj, t_ray *ray, t_obj *save);
+double	rtv1_solve_2_deg(double det, double a, double b);
+double	rtv1_check_inter_cylinder(t_obj *obj, t_ray *ray, int s);
 # endif

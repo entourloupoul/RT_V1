@@ -1,0 +1,26 @@
+scene
+{
+	name=scene6
+	camera
+	{
+		t=0,100,0
+		r=0,0,0
+	}
+	light
+	{
+		t=50,0,100
+	}
+	shadows=off
+}
+objects
+{
+	cylinder
+	{
+		name=c1
+		c=0,0,0
+		a=0,0,1
+		l=34
+		r=5
+		color=0x0000FF
+	}
+}

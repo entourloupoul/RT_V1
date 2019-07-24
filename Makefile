@@ -6,7 +6,7 @@
 #    By: pmasson <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/07 18:54:45 by pmasson           #+#    #+#              #
-#    Updated: 2019/06/06 10:39:13 by pmasson          ###   ########.fr        #
+#    Updated: 2019/07/24 13:40:16 by pmasson          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,6 +22,7 @@ SRCS		=		main.c				rtv1_atoi.c			rtv1_free.c			\
 					rtv1_set_cam_vec.c	rtv1_set_cam_vec2.c	rtv1_create_final.c	\
 					rtv1_get_color.c	rtv1_check_inter_sphere.c				\
 					rtv1_check_inter_plane.c				rtv1_get_shade.c	\
+					rtv1_check_inter_cylinder.c				rtv1_solve_2_deg.c
 
 OBJS		=		$(addprefix $(OBJSDIR)/, $(SRCS:.c=.o))
 

@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 16:30:17 by pmasson           #+#    #+#             */
-/*   Updated: 2019/06/03 14:43:37 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/07/24 13:46:42 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ static int	rtv1_calc_surf2(t_scene *scene, t_cam *cam1, int x, int y, t_ray *ray
 		+ cam1->l * ((double)x / (double)cam1->length - 0.5) * cam1->u[2]
 		+ cam1->r * (0.5 - (double)y / (double)cam1->width) * cam1->v[2];
 */	if (rtv1_get_color(scene, ray) <= 0)
-		return (ft_msg_int(2, "No, color here.\n", 0));
+		return (0);
 	*((unsigned int *)(scene->picture->surface->pixels
 				+ 4 * x + 4 * y * cam1->length)) = (unsigned int)ray->color;
 	return (1);

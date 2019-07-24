@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/24 15:23:15 by pmasson           #+#    #+#             */
-/*   Updated: 2019/06/03 14:31:39 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/07/24 13:48:03 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,8 @@ static double	rtv1_check_inter(t_obj *obj, t_ray *ray, int shift)
 		t = rtv1_check_inter_plane(obj, ray, shift);
 	if (obj->type == 2)
 		t = rtv1_check_inter_sphere(obj, ray, shift);
+	if (obj->type == 3)
+		t = rtv1_check_inter_cylinder(obj, ray, shift);
 	return (t);
 }
 
@@ -56,7 +58,7 @@ static int	rtv1_get_color2(t_scene *scene, t_obj *obj,
 	double	ret;
 
 	if (t < 0)
-		return (ft_msg_int(2, "pas de t\n", 0));
+		return (0);
 	ray->color = obj->color;
 	if (scene->light == NULL)
 		return (1);

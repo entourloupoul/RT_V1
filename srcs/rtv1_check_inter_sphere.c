@@ -6,31 +6,12 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/24 16:03:41 by pmasson           #+#    #+#             */
-/*   Updated: 2019/06/03 14:58:41 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/07/11 13:02:49 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "libft.h"
-#include <stdio.h>
-static double	rtv1_inter_sphere_get_t(double det, double a, double b)
-{
-	double	t1;
-	double	t2;
-
-	if (det == 0)
-		return (-b / (2 * a));
-	else
-	{
-		t1 = (-b + sqrt(det)) / (2 * a);
-		t2 = (-b - sqrt(det)) / (2 * a);
-	}
-	if (t1 >= 0 && t1 <= t2)
-		return (t1);
-	if (t2 >= 0 && t2 <= t1)
-		return (t2);
-	return (-1);
-}
 
 double	rtv1_check_inter_sphere(t_obj *obj, t_ray *ray, int s)
 {
@@ -50,10 +31,9 @@ double	rtv1_check_inter_sphere(t_obj *obj, t_ray *ray, int s)
 		+ pow(ray->source[1 + s] - obj->data[1] , 2)
 		+ pow(ray->source[2 + s] - obj->data[2] , 2) - pow(obj->data[3], 2);
 	det = b * b - 4 * a * c;
-	//printf("det:%f\n", det);
 	if (det < 0)
 		return (-1);
 	else
-		t = rtv1_inter_sphere_get_t(det, a, b);
+		t = rtv1_solve_2_deg(det, a, b);
 	return (t);
 }
