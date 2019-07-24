@@ -12,7 +12,7 @@
 
 ### Build ###
 # Prerequisites
-/build/
+/objs/
 
 # Command result buffer
 .tmp.txt
