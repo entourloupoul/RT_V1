@@ -3,100 +3,191 @@
 /*                                                        :::      ::::::::   */
 /*   rtv1.h                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: pmasson <pmasson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 13:39:26 by pmasson           #+#    #+#             */
-/*   Updated: 2019/07/11 13:07:49 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/07/24 17:36:57 by fstadelw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef RTV1_H
 # define RTV1_H
+
 # include <SDL2/SDL.h>
-# define HEXA "0123456789ABCDEF"
-# define DEC "0123456789"
-typedef	struct	s_obj
+# include <stdint.h>
+# include <stdbool.h>
+# include <stddef.h>
+
+typedef struct	s_color
 {
-	char	*name;
-	char	type;
-	int		*data;
-	double	*norm;
-	int		opt;
-	int		color;
-	struct s_obj	*next;
-}				t_obj;
+	int8_t		a;
+	int8_t		b;
+	int8_t		g;
+	int8_t		r;
+}				t_color;
+
+typedef union	u_pixel
+{
+	int32_t		color;
+	t_color		p;
+}				t_pixel;
+
+typedef struct	s_vec2d
+{
+	int32_t		x;
+	int32_t		y;
+}				t_vec2d;
+
+typedef struct	s_fvec2d
+{
+	double		x;
+	double		y;
+}				t_fvec2d;
+
+typedef struct	s_vec3d
+{
+	int32_t		x;
+	int32_t		y;
+	int32_t		z;
+}				t_vec3d;
+
+typedef struct	s_fvec3d
+{
+	double		x;
+	double		y;
+	double		z;
+}				t_fvec3d;
+
 typedef struct	s_light
 {
-	int		nb;
-	int		*coord;
+	t_fvec3d		pos;
 	struct s_light	*next;
 }				t_light;
+
+typedef struct	s_plane
+{
+	t_fvec3d	equation;
+	double		constant;
+}				t_plane;
+
+typedef struct	s_sphere
+{
+	t_fvec3d	center;
+	double		radius;
+}				t_sphere;
+
+typedef struct	s_cylinder
+{
+	t_fvec3d	center;
+	t_fvec3d	axis;
+	double		radius;
+}				t_cylinder;
+
+typedef struct	s_cone
+{
+	t_fvec3d	center;
+	t_fvec3d	axis;
+	double		angle;
+}				t_cone;
+
+typedef enum	e_obj_type
+{
+	PLANE,
+	SPHERE,
+	CYLINDER,
+	CONE
+}				t_obj_type;
+
+typedef union	u_obj_union
+{
+	t_plane		plane;
+	t_sphere	sphere;
+	t_cylinder	cylinder;
+	t_cone		cone;
+}				t_obj_union;
+
+typedef struct	s_obj
+{
+	char			*name;
+	bool			is_shine;
+	t_pixel			color;
+	t_obj_type		type;
+	t_obj_union		u;
+	struct s_obj	*next;
+}				t_obj;
+
+typedef struct	s_geo
+{
+	t_fvec3d	pos;
+	t_fvec3d	dir;
+}				t_geo;
+
+typedef struct	s_ray
+{
+	t_geo		cam;
+	t_geo		obj;
+	double		dist;
+	double		ambient;
+	double		shade;
+	t_pixel		color;
+}				t_ray;
+
 typedef struct	s_cam
 {
-	int	*coord;
-	double	*w;
-	double	*u;
-	double	*v;
-	double	n;
-	double	l;
-	double	r;
-	int	length;
-	int	width;
+	t_fvec3d	pos;
+	t_fvec3d	u;
+	t_fvec3d	v;
+	t_fvec3d	w;
+	double		screen_normal;
+	t_fvec2d	screen_ratio;
+	t_vec2d		px_screen_size;
 }				t_cam;
-typedef struct	s_picture
+
+typedef struct	s_sdl
 {
 	SDL_Window		*window;
 	SDL_Renderer	*renderer;
 	SDL_Surface		*surface;
 	SDL_Texture		*texture;
-	int				length;
-	int				width;
-}				t_picture;
-typedef	struct	s_scene
+	t_vec2d			size;
+}				t_sdl;
+
+typedef struct	s_rt
 {
-	char	*name;
-	t_cam	*cam;
-	char	done;
-	int		shadows;
-	char	tobj;
-	t_light	*light;
-	t_obj	*obj;
-	t_picture	*picture;
-}				t_scene;
-typedef struct	s_ray
-{
-	double	source[6];
-	double	vec[6];
-	int		hits;
-	double	t;
-	double	ambient;
-	double	shade;
-	int		color;
-}				t_ray;
+	t_cam		cam;
+	t_obj		*objs;
+	t_light		*lights;
+	t_sdl		sdl;
+}				t_rt;
+
 typedef struct	s_terms
 {
-	double	i;
-	double	j;
-	double	k;
-	double	l;
-	double	m;
-	double	n;
+	double		i;
+	double		j;
+	double		k;
+	double		l;
+	double		m;
+	double		n;
 }				t_terms;
-int		rtv1_get_scene(t_scene *scene, int fd);
-void	rtv1_free_tab(char **tab);
-int		rtv1_atoi(char *str, int *d);
-int		rtv1_check_param(char *line);
-int		rtv1_get_light(t_scene *scene, char **nb, int *i, char *line);
-int		rtv1_get_obj(t_scene *scene, char *line);
-int		rtv1_get_coord_obj(t_obj *obj, char *line);
-void	rtv1_free_scene(t_scene **scene);
-int		rtv1_create_final(t_scene *scene);
-int		rtv1_set_cam_vec(t_cam *cam);
-int		rtv1_set_cam_vec2(t_cam *cam);
-int		rtv1_get_color(t_scene *scene, t_ray *ray);
-double	rtv1_check_inter_sphere(t_obj *obj, t_ray *ray, int s);
-double	rtv1_check_inter_plane(t_obj *obj, t_ray *ray, int s);
-int		rtv1_get_shade(t_scene *scene, t_obj *obj, t_ray *ray, t_obj *save);
-double	rtv1_solve_2_deg(double det, double a, double b);
-double	rtv1_check_inter_cylinder(t_obj *obj, t_ray *ray, int s);
-# endif
+
+/*
+** int		rtv1_get_scene(t_scene *scene, int fd);
+** void	rtv1_free_tab(char **tab);
+** int		rtv1_atoi(char *str, int *d);
+** int		rtv1_check_param(char *line);
+** int		rtv1_get_light(t_scene *scene, char **nb, int *i, char *line);
+** int		rtv1_get_obj(t_scene *scene, char *line);
+** int		rtv1_get_coord_obj(t_obj *obj, char *line);
+** void	rtv1_free_scene(t_scene **scene);
+** int		rtv1_create_final(t_scene *scene);
+** int		rtv1_set_cam_vec(t_cam *cam);
+** int		rtv1_set_cam_vec2(t_cam *cam);
+** int		rtv1_get_color(t_scene *scene, t_ray *ray);
+** double	rtv1_check_inter_sphere(t_obj *obj, t_ray *ray, int s);
+** double	rtv1_check_inter_plane(t_obj *obj, t_ray *ray, int s);
+** vint		rtv1_get_shade(t_scene *scene, t_obj *obj, t_ray *ray, t_obj *save);
+** double	rtv1_solve_2_deg(double det, double a, double b);
+** double	rtv1_check_inter_cylinder(t_obj *obj, t_ray *ray, int s);
+*/
+
+#endif
