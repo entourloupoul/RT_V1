@@ -6,7 +6,7 @@
 #    By: pmasson <pmasson@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/07 18:54:45 by pmasson           #+#    #+#              #
-#    Updated: 2019/07/24 15:07:24 by fstadelw         ###   ########.fr        #
+#    Updated: 2019/07/24 17:39:32 by fstadelw         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -21,7 +21,6 @@ CPPFLAGS	+= -I ~/Library/Frameworks/SDL2.framework/Versions/A/Headers
 CPPFLAGS	+= -F ~/Library/Frameworks/
 
 LDFLAGS	:= -framework SDL2
-
 
 SRCS	:= \
 	main.c						\

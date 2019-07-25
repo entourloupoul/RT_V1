@@ -3,30 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   testmath.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: pmasson <pmasson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 14:00:51 by pmasson           #+#    #+#             */
-/*   Updated: 2019/05/16 18:09:53 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/07/25 15:07:02 by fstadelw         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <math.h>
 #include <stdio.h>
+#include <stdio.h>
+
+void	dot_product_square(double r[3][3], double m1[3][3], double m2[3][3])
+{
+	r[0][0] = m1[0][0] * m2[0][0] + m1[0][1] * m2[1][0] + m1[0][2] * m2[2][0];
+	r[0][1] = m1[0][0] * m2[0][1] + m1[0][1] * m2[1][1] + m1[0][2] * m2[2][1];
+	r[0][2] = m1[0][0] * m2[0][2] + m1[0][1] * m2[1][2] + m1[0][2] * m2[2][2];
+	r[1][0] = m1[1][0] * m2[0][0] + m1[1][1] * m2[1][0] + m1[1][2] * m2[2][0];
+	r[1][1] = m1[1][0] * m2[0][1] + m1[1][1] * m2[1][1] + m1[1][2] * m2[2][1];
+	r[1][2] = m1[1][0] * m2[0][2] + m1[1][1] * m2[1][2] + m1[1][2] * m2[2][2];
+	r[2][0] = m1[2][0] * m2[0][0] + m1[2][1] * m2[1][0] + m1[2][2] * m2[2][0];
+	r[2][1] = m1[2][0] * m2[0][1] + m1[2][1] * m2[1][1] + m1[2][2] * m2[2][1];
+	r[2][2] = m1[2][0] * m2[0][2] + m1[2][1] * m2[1][2] + m1[2][2] * m2[2][2];
+}
+
+void	dot_product_column(double r[3], double m1[3][3], double col[3])
+{
+	r[0] = m1[0][0] * col[0] + m1[0][1] * col[1] + m1[0][2] * col[2];
+	r[1] = m1[1][0] * col[0] + m1[1][1] * col[1] + m1[1][2] * col[2];
+	r[2] = m1[2][0] * col[0] + m1[2][1] * col[1] + m1[2][2] * col[2];
+}
+
+void	print_matrice(double r[3][3])
+{
+	printf("[%f, %f, %f]\n", r[0][0], r[0][1], r[0][2]);
+	printf("[%f, %f, %f]\n", r[1][0], r[1][1], r[1][2]);
+	printf("[%f, %f, %f]\n", r[2][0], r[2][1], r[2][2]);
+}
 
 int	main(void)
 {
-	int	a;
-	int	b;
-	double f;
-	double g;
-	double h;
+	double	test[3][3] = {
+		{1, 2, 0},
+		{4, 3, -1},
+		{9, -5, 7},
+	};
+	double	test3[3][3];
 
-	a = 7;
-	b = 1;
-	f = 0.394395;
-	g = 0.918941;
-	a = sqrt(pow(a,2) + pow(b, 2));
-	h = sqrt(pow(f, 2) + pow(g, 2));
-	printf("a:%f\nf:%f\n", (double)a, h);
+	dot_product_square(test3, test,
+		(double [3][3]){
+			{5, 1, 3},
+			{2, 3, 18},
+			{3, 4, 6},
+		});
+	print_matrice(test3);
+	double	test4[3];
+	dot_product_column(test4,
+		(double [3][3]){
+			{1, 2, 0},
+			{4, 3, -1},
+			{19, 6, 7},
+		},
+		(double [3]){-1, 9, 5});
+	printf("[%f, %f, %f]\n", test4[0], test4[1], test4[2]);
 	return (0);
 }
