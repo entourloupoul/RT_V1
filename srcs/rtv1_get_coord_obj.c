@@ -25,63 +25,41 @@
  * cone(c,c,c,r,a,a,a,l)
  * plane(e,e,e,e)*/
 #include <stdio.h>
-static int	rtv1_get_coord_obj2(t_obj *obj, char **nb, int s)
-{
-	int	i;
-	int	shift;
 
-	shift = s == 10 ? 0 : s;
-	i = 0;
-	while (i + shift < 8 && nb[i] != NULL)
-	{
-		if (rtv1_atoi(nb[i], &obj->data[i + shift]) == 0)
-			return (ft_msg_int(2, "Error, wrong term in coord obj.\n", -1));
-		i++;
-	}
-	if (s == 0 && i != 3 && obj->type != 2 && obj->type != 3 && obj->type != 4)
-		return (ft_msg_int(2, "Error, wrong type of coord in object.\n", -1));
-	if (s == 10 && i != 4 && obj->type != 1)
-		return (ft_msg_int(2, "Error, wrong type of coord in object.\n", -1));
-	if (s == 3 && i != 1 && obj->type != 2 && obj->type != 3 && obj->type != 4)
-		return (ft_msg_int(2, "Error, wrong type of coord in object.\n", -1));
-	if (s == 4 && i != 3 && obj->type != 3 && obj->type != 4)
-		return (ft_msg_int(2, "Error, wrong type of coord in object.\n", -1));
-	if (s == 7 && i != 1 && obj->type != 3 && obj->type != 4)
-		return (ft_msg_int(2, "Error, wrong type of coord in object.\n", -1));
-	return (1);
-}
-
-static void	rtv1_get_norm(t_obj *obj)
+static int	rtv1_get_plane_coord(t_obj *obj, char **nb)
 {
+	double	eq[4];
+	int		i;
 	double	length;
 
-	obj->norm[0] = (double)obj->data[0];
-	obj->norm[1] = (double)obj->data[1];
-	obj->norm[2] = (double)obj->data[2];
-	length = sqrt(obj->norm[0] * obj->norm[0] + obj->norm[1] * obj->norm[1]
-			+ obj->norm[2] * obj->norm[2]);
+	if (line[0] != 'e')
+		return (ft_msg_int(2, "Error, no equation in plane.\n", -1));
+	ft_bzero(eq, sizeof(double) * 4);
+	i = 0;
+	while (eq[i] = != NULL && i < 4 && rtv1_atoi(nb[i], &eq[i]) == 1)
+		i++;
+	if (i != 4 || (i == 4 && nb[i] != NULL))
+		return (ft_msg_int(2, "Error, plane equation wrong.\n", -1));
+	obj->u->equation->x = eq[0];
+	obj->u->equation->y = eq[1];
+	obj->u->equation->z = eq[2];
+	obj->u->constant = eq[3];
+	length = sqrt(eq[0] * eq[0] + eq[1] * eq[1] + eq[2] * eq[2]);
 	if (length == 0)
-		return ;
-	obj->norm[0] = obj->norm[0] / length;
-	obj->norm[1] = obj->norm[1] / length;
-	obj->norm[2] = obj->norm[2] / length;
+		return (1);
+	obj->u->norm->x = eq[0] / length;
+	obj->u->norm->y = eq[1] / length;
+	obj->u->norm->z = eq[2] / length;
+	return (1);
 }
 
 int	rtv1_get_coord_obj(t_obj *obj, char *line)
 {
 	int		shift;
 	char	**nb;
+	int		ret;
 
-	if (line[0] == 'c')
-		shift = 0;
-	if (line[0] == 'e')
-		shift = 10;
-	if (line[0] == 'r')
-		shift = 3;
-	if (line[0] == 'a')
-		shift = 4;
-	if (line[0] == 'l')
-		shift = 7;
+	ret = 0;
 	if (!(nb = ft_strsplit(line + 2, ',')))
 		return (ft_msg_int(2, "Error, failed split obj.\n", -1));
 	if (rtv1_get_coord_obj2(obj, nb, shift) != 1)
@@ -89,9 +67,9 @@ int	rtv1_get_coord_obj(t_obj *obj, char *line)
 		rtv1_free_tab(nb);
 		return (-1);
 	}
+	if (obj->type == PLANE)
+		ret = rtv1_get_plane_coord(obj, nb, line);
 	rtv1_free_tab(nb);
-	if (obj->type == 1)
-		rtv1_get_norm(obj);
 	return (1);
 }
 

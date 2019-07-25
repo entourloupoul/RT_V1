@@ -68,6 +68,7 @@ typedef struct	s_plane
 {
 	t_fvec3d	equation;
 	double		constant;
+	t_fvec3d	norm;
 }				t_plane;
 
 typedef struct	s_sphere
