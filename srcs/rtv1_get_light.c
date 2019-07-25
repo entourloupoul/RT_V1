@@ -6,12 +6,13 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 13:04:17 by pmasson           #+#    #+#             */
-/*   Updated: 2019/07/25 11:55:00 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/07/25 15:20:15 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <rtv1.h>
+#include "rtv1.h"
 #include <stdlib.h>
+#include "libft.h"
 
 static void	rtv1_light_lst(t_rt *rt, t_light *new)
 {
@@ -28,7 +29,7 @@ static void	rtv1_light_lst(t_rt *rt, t_light *new)
 	}
 }
 
-int  rtv1_get_light(t_scene *scene, char **nb, int *count, char *line)
+int  rtv1_get_light(t_rt *rt, char **nb, int *count, char *line)
 {
 	t_light *new;
 	int		ret;
@@ -45,10 +46,10 @@ int  rtv1_get_light(t_scene *scene, char **nb, int *count, char *line)
 		ret = rtv1_atoi(nb[*count], &vec[*count]);
 		*count = *count + 1;
 	}
-	new->pos->x = vec[0];
-	new->pos->y = vec[1];
-	new->pos->z = vec[2];
+	new->pos.x = vec[0];
+	new->pos.y = vec[1];
+	new->pos.z = vec[2];
 	new->next = NULL;
-	rtv1_light_lst(scene, new);
+	rtv1_light_lst(rt, new);
 	return (ret);
 }

@@ -1,9 +1,9 @@
 scene
 name=test sphere plane
 camera
-t=0,-200,50
+pos=0,-200,50
 light
-t=0,0,100
+pos=0,0,100
 objects
 sphere
 name=sphere1

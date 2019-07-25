@@ -1,9 +1,9 @@
 scene
 name=scene3
 camera
-t=0,-100,100
+pos=0,-100,100
 light
-t=0,0,100
+pos=0,0,100
 objects
 sphere
 name=sphere1

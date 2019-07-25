@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 09:23:14 by pmasson           #+#    #+#             */
-/*   Updated: 2019/05/24 18:40:31 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/07/25 15:18:17 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-static int	rtv1_get_cam(t_rt *rt, char **nb, int *count, int shift)
+static int	rtv1_get_cam(t_rt *rt, char **nb, int *count, char *line)
 {
 	int	ret;
 	double		vec[3];
@@ -23,20 +23,20 @@ static int	rtv1_get_cam(t_rt *rt, char **nb, int *count, int shift)
 
 	ft_bzero(vec, sizeof(double) * 3);
 	if (ft_strncmp(line , "pos=", 4) == 0)
-		save = &(rt->cam->pos);
+		save = &(rt->cam.pos);
 	else
-		save = &(rt->cam->rot);
+		save = &(rt->cam.rot);
 	ret = 1;
 	while (ret == 1 && nb[*count] != NULL && *count < 3)
 	{
-		ret = rtv1_atoi(nb[*i], &vec[*count]);
+		ret = rtv1_atoi(nb[*count], &vec[*count]);
 		*count = *count + 1;
 	}
 	save->x = vec[0];
 	save->y = vec[1];
 	save->z = vec[2];
-	rt->cam->px_screen_size->x = 1024;
-	rt->cam->px_screen_size->y = 1024;
+	rt->cam.px_screen_size.x = 1024;
+	rt->cam.px_screen_size.y = 1024;
 	return (ret);
 }
 
@@ -54,20 +54,20 @@ static int	rtv1_get_coord(t_rt *rt, char *line, int *step)
 	if (!(nb = ft_strsplit(line + 4, ',')))
 		return (ft_msg_int(2, "Error, failed split.\n", -1));
 	if (*step == 3)
-		ret = rtv1_get_cam(scene, nb, &count, line);
+		ret = rtv1_get_cam(rt, nb, &count, line);
 	if (*step == 4)
-		ret = rtv1_get_light(scene, nb, &count, line);
+		ret = rtv1_get_light(rt, nb, &count, line);
 	if ((count != 3 || (count == 3 && nb[count] != NULL)) || ret != 1)
 	{
 		rtv1_free_tab(nb);
 		return  (ft_msg_int(2, "Error, cam/light problem.\n", -1));
 	}
 	rtv1_free_tab(nb);
-	*step == 6;
+	*step = 6;
 	return (0);
 }	
 
-static int	rtv1_manage_cls(t_scene *scene, char *line, int *step)
+static int	rtv1_manage_cls(t_rt *rt, char *line, int *step)
 {
 	if ((*step == 2 || *step == 6) && ft_strcmp(line, "camera") == 0)
 		*step = 3;
@@ -83,7 +83,7 @@ static int	rtv1_manage_cls(t_scene *scene, char *line, int *step)
 		rt->shadows = ft_strcmp(line + 8, "no") == 0 ? 0 : rt->shadows;
 	}
 	else if (*step == 3 || *step == 4)
-		return (rtv1_get_coord(rt, line, 0, step));
+		return (rtv1_get_coord(rt, line, step));
 	else if (*step >= 10)
 		return (rtv1_get_obj(rt, line));
 	if (*step < 3)
@@ -97,7 +97,7 @@ static int	rtv1_manage_line(t_rt *rt, char *line, int *step)
 	if (*step == 0 && ft_strcmp(line, "scene") != 0)
 		return (ft_msg_int(2, "Error, must start with <scene>.\n", -1));
 	else if (*step == 0)
-		*step == 1;
+		*step = 1;
 	else if (*step == 1)
 	{
 		if (ft_strncmp(line, "name=", 5) != 0)
@@ -108,7 +108,7 @@ static int	rtv1_manage_line(t_rt *rt, char *line, int *step)
 	}
 	else if (*step > 1)
 	{
-		if (rtv1_manage_cls(scene, line, step) < 0)
+		if (rtv1_manage_cls(rt, line, step) < 0)
 			return (-1);
 	}
 	return (0);

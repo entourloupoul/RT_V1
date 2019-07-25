@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 13:40:40 by pmasson           #+#    #+#             */
-/*   Updated: 2019/07/24 13:15:17 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/07/25 15:06:54 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 #include <SDL2/SDL.h>
 
 #include <stdio.h>
+/*
 static int	rtv1_create_window(t_scene *scene, t_picture *picture)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -106,13 +107,14 @@ static int	rtv1_create_scene(t_scene *scene)
 		return (-1);
 	return (1);
 }
-
+*/
 int	main(int argc, char **argv)
 {
 	int	fd;
 	int	ret;
 	t_rt	*rt;
 
+	ret = 0;
 	if (argc != 2)
 		return (ft_msg_int(1, "usage : ./rtv1 <scene file>\n", 0));
 	if ((fd = open(argv[1], O_RDONLY)) < 0)
@@ -126,12 +128,12 @@ int	main(int argc, char **argv)
 	if (rtv1_get_scene(rt, fd) < 0)
 	{
 		close(fd);
-		rtv1_free_scene(&scene);
+//		rtv1_free_scene(&scene);
 		return (-1);
 	}
 	close(fd);
 	//prendre en compte les autres argv pour changement ou changement interatcif.
-	ret = rtv1_create_scene(scene);
-	rtv1_free_scene(&scene);
+//	ret = rtv1_create_scene(scene);
+//	rtv1_free_scene(&scene);
 	return (ret);
 }

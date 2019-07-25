@@ -6,7 +6,7 @@
 /*   By: pmasson <pmasson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 13:39:26 by pmasson           #+#    #+#             */
-/*   Updated: 2019/07/24 17:36:57 by fstadelw         ###   ########.fr       */
+/*   Updated: 2019/07/25 15:06:03 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ typedef struct	s_cone
 {
 	t_fvec3d	center;
 	t_fvec3d	axis;
-	double		angle;
+	double		phy;
 }				t_cone;
 
 typedef enum	e_obj_type
@@ -174,14 +174,14 @@ typedef struct	s_terms
 	double		n;
 }				t_terms;
 
+
+int		rtv1_get_scene(t_rt *rt, int fd);
+void	rtv1_free_tab(char **tab);
+int		rtv1_atoi(char *str, double *d);
+int		rtv1_get_light(t_rt *rt, char **nb, int *i, char *line);
+int		rtv1_get_obj(t_rt *rt, char *line);
+int		rtv1_get_coord_obj(t_obj *obj, char *line);
 /*
-** int		rtv1_get_scene(t_scene *scene, int fd);
-** void	rtv1_free_tab(char **tab);
-** int		rtv1_atoi(char *str, int *d);
-** int		rtv1_check_param(char *line);
-** int		rtv1_get_light(t_scene *scene, char **nb, int *i, char *line);
-** int		rtv1_get_obj(t_scene *scene, char *line);
-** int		rtv1_get_coord_obj(t_obj *obj, char *line);
 ** void	rtv1_free_scene(t_scene **scene);
 ** int		rtv1_create_final(t_scene *scene);
 ** int		rtv1_set_cam_vec(t_cam *cam);

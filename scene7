@@ -3,12 +3,12 @@ scene
 	name=scene5
 	camera
 	{
-		t=0,100,20
-		r=0,0,0
+		pos=0,100,20
+		rot=0,0,0
 	}
 	light
 	{
-		t=50,0,100
+		pos=50,0,100
 	}
 	shadows=off
 }
@@ -23,7 +23,6 @@ objects
 		name=c1
 		c=0,0,0
 		a=0,0,1
-		l=34
 		r=5
 		color=0x0000FF
 	}
