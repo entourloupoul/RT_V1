@@ -15,116 +15,113 @@
 #include <stdlib.h>
 #include "get_next_line.h"
 
-static int	rtv1_get_cam(t_scene *scene, char **nb, int *i, int shift)
+static int	rtv1_get_cam(t_rt *rt, char **nb, int *count, int shift)
 {
 	int	ret;
+	double		vec[3];
+	t_fvec3d	*save;
 
-	if (scene->cam == NULL)
-	{
-		if (!(scene->cam = (t_cam *)malloc(sizeof(t_cam) * 1)))
-			return (-1);
-		if (!(scene->cam->coord = (int *)malloc(sizeof(int) * 6)))
-		{
-			free(scene->cam);
-			scene->cam = NULL;
-			return (-1);
-		}
-	}
+	ft_bzero(vec, sizeof(double) * 3);
+	if (ft_strncmp(line , "pos=", 4) == 0)
+		save = &(rt->cam->pos);
+	else
+		save = &(rt->cam->rot);
 	ret = 1;
-	scene->cam->w = NULL;
-	scene->cam->u = NULL;
-	scene->cam->v = NULL;
-	while (ret == 1 && nb[*i] != NULL && *i < 3)
+	while (ret == 1 && nb[*count] != NULL && *count < 3)
 	{
-		ret = rtv1_atoi(nb[*i], &scene->cam->coord[*i + shift]);
-		*i = *i + 1;
+		ret = rtv1_atoi(nb[*i], &vec[*count]);
+		*count = *count + 1;
 	}
-	scene->cam->length = 1024;
-	scene->cam->width = 1024;
+	save->x = vec[0];
+	save->y = vec[1];
+	save->z = vec[2];
+	rt->cam->px_screen_size->x = 1024;
+	rt->cam->px_screen_size->y = 1024;
 	return (ret);
 }
 
 
-static int	rtv1_get_coord(t_scene *scene, char *line, int i)
+static int	rtv1_get_coord(t_rt *rt, char *line, int *step)
 {
 	char	**nb;
-	int		shift;
 	int		ret;
+	int		count;
 	
+	count = 0;
 	ret = 1;
-	if (ft_strncmp(line, "t=", 2) != 0 && ft_strncmp(line, "r=", 2) != 0)
+	if (ft_strncmp(line, "pos=", 4) != 0 && ft_strncmp(line, "rot=", 4) != 0)
 		return (ft_msg_int(2, "Error, problem in cam/light coord.\n", -1));
-	if (!(nb = ft_strsplit(line + 2, ',')))
+	if (!(nb = ft_strsplit(line + 4, ',')))
 		return (ft_msg_int(2, "Error, failed split.\n", -1));
-	if (scene->done == 3)
-	{
-		shift = line[0] == 't' ? 0 : 3;
-		ret = rtv1_get_cam(scene, nb, &i, shift);
-	}
-	if (scene->done == 4)
-		ret = rtv1_get_light(scene, nb, &i, line);
-	if ((i != 3 || (i == 3 && nb[i] != NULL)) || ret != 1)
+	if (*step == 3)
+		ret = rtv1_get_cam(scene, nb, &count, line);
+	if (*step == 4)
+		ret = rtv1_get_light(scene, nb, &count, line);
+	if ((count != 3 || (count == 3 && nb[count] != NULL)) || ret != 1)
 	{
 		rtv1_free_tab(nb);
 		return  (ft_msg_int(2, "Error, cam/light problem.\n", -1));
 	}
 	rtv1_free_tab(nb);
+	*step == 6;
 	return (0);
 }	
 
-
-
-static int	rtv1_manage_cls(t_scene *scene, char *line)
+static int	rtv1_manage_cls(t_scene *scene, char *line, int *step)
 {
-	if (scene->done == 2 && ft_strcmp(line, "camera") == 0)
-		scene->done = 3;
-	else if (scene->done < 10 && ft_strcmp(line, "light") == 0)
-		scene->done = 4;
+	if ((*step == 2 || *step == 6) && ft_strcmp(line, "camera") == 0)
+		*step = 3;
+	else if ((*step == 2 || *step == 6) && ft_strcmp(line, "light") == 0)
+		*step = 4;
 	else if (ft_strcmp(line, "objects") == 0)
-		scene->done = 10;
-	else if (scene->done < 10 && ft_strncmp(line, "shadows=", 8) == 0)
+		*step = 10;
+	else if ((*step == 2 || *step == 6) && ft_strncmp(line, "shadows=", 8) == 0)
 	{
-		scene->shadows = ft_strcmp(line + 8, "on") == 0 ? 1 : scene->shadows;
-		scene->shadows = ft_strcmp(line + 8, "yes") == 0 ? 1 : scene->shadows;
+		rt->shadows = ft_strcmp(line + 8, "on") == 0 ? 1 : rt->shadows;
+		rt->shadows = ft_strcmp(line + 8, "yes") == 0 ? 1 : rt->shadows;
+		rt->shadows = ft_strcmp(line + 8, "off") == 0 ? 0 : rt->shadows;
+		rt->shadows = ft_strcmp(line + 8, "no") == 0 ? 0 : rt->shadows;
 	}
-	else if (scene->done == 3 || scene->done == 4)
-		return (rtv1_get_coord(scene, line, 0));
-	else if (scene->done >= 10)
-		return (rtv1_get_obj(scene, line));
-	if (scene->done < 3)
+	else if (*step == 3 || *step == 4)
+		return (rtv1_get_coord(rt, line, 0, step));
+	else if (*step >= 10)
+		return (rtv1_get_obj(rt, line));
+	if (*step < 3)
 		return (ft_msg_int(2, "Error, wrong syntax in scene.\n", -1));
 	return (0);
 }
 
 
-static int	rtv1_manage_line(t_scene *scene, char *line)
+static int	rtv1_manage_line(t_rt *rt, char *line, int *step)
 {
-	if (scene->done == 0 && ft_strcmp(line, "scene") != 0)
+	if (*step == 0 && ft_strcmp(line, "scene") != 0)
 		return (ft_msg_int(2, "Error, must start with <scene>.\n", -1));
-	else if (scene->done == 0)
-		scene->done = 1;
-	else if (scene->done == 1)
+	else if (*step == 0)
+		*step == 1;
+	else if (*step == 1)
 	{
 		if (ft_strncmp(line, "name=", 5) != 0)
 			return (ft_msg_int(2, "Error, name should be here.\n", -1));
-		if (!(scene->name = ft_strdup(line + 5)))
-			return (ft_msg_int(2, "Error, failed dup name.\n", -1));
-		scene->done = 2;
+		if (!(rt->name = ft_strdup(line + 5)))
+			return (ft_msg_int(2, "Error, failed dup name scene.\n", -1));
+		*step = 2;
 	}
-	else if (scene->done > 1)
+	else if (*step > 1)
 	{
-		if (rtv1_manage_cls(scene, line) < 0)
+		if (rtv1_manage_cls(scene, line, step) < 0)
 			return (-1);
 	}
 	return (0);
 }
 
-int	rtv1_get_scene(t_scene *scene, int fd)
+int	rtv1_get_scene(t_rt *rt, int fd)
 {
 	char	*line;
 	char	*tmp;
 	int		end;
+	int		step;
 
+	step = 0;
 	line = NULL;
 	end = 0;
 	while (end == 0 && get_next_line(fd, &line) > 0)
@@ -135,7 +132,7 @@ int	rtv1_get_scene(t_scene *scene, int fd)
 			return (ft_msg_int(2, "Error, failed trim.\n", -1));
 		}
 		if (tmp[0] != '}' && tmp[0] != '{')
-			end = rtv1_manage_line(scene, tmp);
+			end = rtv1_manage_line(rt, tmp, &step);
 		free(tmp);
 		free(line);
 	}

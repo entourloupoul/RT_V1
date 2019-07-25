@@ -6,52 +6,48 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 13:04:17 by pmasson           #+#    #+#             */
-/*   Updated: 2019/05/09 14:47:01 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/07/25 11:55:00 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <rtv1.h>
 #include <stdlib.h>
 
-static void	rtv1_light_lst(t_scene *scene, t_light *new)
+static void	rtv1_light_lst(t_rt *rt, t_light *new)
 {
 	t_light	*tmp;
 
-	if (scene->light == NULL)
-	{
-		new->nb = 0;
-		scene->light = new;
-	}
+	if (rt->lights == NULL)
+		rt->lights = new;
 	else
 	{
-		tmp = scene->light;
+		tmp = rt->lights;
 		while (tmp->next != NULL)
 			tmp = tmp->next;
-		new->nb = tmp->nb + 1;
 		tmp->next = new;
 	}
 }
 
-int  rtv1_get_light(t_scene *scene, char **nb, int *i, char *line)
+int  rtv1_get_light(t_scene *scene, char **nb, int *count, char *line)
 {
 	t_light *new;
 	int		ret;
+	double	vec[3];
 
-	if (line[0] != 't')
+	ft_bzero(vec, sizeof(double) * 3);
+	if (line[0] != 'p')
 		return (-1);
 	if (!(new = (t_light *)malloc(sizeof(t_light) * 1)))
 		return (-1);
-	if (!(new->coord = (int *)malloc(sizeof(int) * 4)))
-	{
-		free(new);
-		return (-1);
-	}
 	ret = 1;
-	while (ret == 1 && nb[*i] != NULL && *i < 3)
+	while (ret == 1 && nb[*count] != NULL && *count < 3)
 	{
-		ret = rtv1_atoi(nb[*i], &new->coord[*i]);
-		*i = *i + 1;
+		ret = rtv1_atoi(nb[*count], &vec[*count]);
+		*count = *count + 1;
 	}
+	new->pos->x = vec[0];
+	new->pos->y = vec[1];
+	new->pos->z = vec[2];
 	new->next = NULL;
 	rtv1_light_lst(scene, new);
 	return (ret);

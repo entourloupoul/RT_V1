@@ -6,13 +6,13 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/06 14:26:00 by pmasson           #+#    #+#             */
-/*   Updated: 2019/05/07 13:26:40 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/07/25 11:56:32 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-int	rtv1_atoi(char *str, int *d)
+int	rtv1_atoi(char *str, double *d)
 {
 	int		i;
 	long	a;
@@ -36,6 +36,6 @@ int	rtv1_atoi(char *str, int *d)
 			return (0);
 		i--;
 	}
-	*d = a;
+	*d = (double)a;
 	return (1);
 }

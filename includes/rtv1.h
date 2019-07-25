@@ -135,6 +135,7 @@ typedef struct	s_ray
 typedef struct	s_cam
 {
 	t_fvec3d	pos;
+	t_fvec3d	rot;
 	t_fvec3d	u;
 	t_fvec3d	v;
 	t_fvec3d	w;
@@ -154,10 +155,12 @@ typedef struct	s_sdl
 
 typedef struct	s_rt
 {
+	char		*name;
 	t_cam		cam;
 	t_obj		*objs;
 	t_light		*lights;
 	t_sdl		sdl;
+	bool		shadows;
 }				t_rt;
 
 typedef struct	s_terms

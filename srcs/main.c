@@ -111,19 +111,19 @@ int	main(int argc, char **argv)
 {
 	int	fd;
 	int	ret;
-	t_scene	*scene;
+	t_rt	*rt;
 
 	if (argc != 2)
 		return (ft_msg_int(1, "usage : ./rtv1 <scene file>\n", 0));
 	if ((fd = open(argv[1], O_RDONLY)) < 0)
 		return (ft_msg_int(2, "Error, can't open scene file", -1));
-	if (!(scene = (t_scene *)malloc(sizeof(t_scene) * 1)))
+	if (!(rt = (t_rt *)malloc(sizeof(t_rt) * 1)))
 	{
 		close(fd);
-		return (ft_msg_int(2, "Error, failed malloc scene.\n", -1));
+		return (ft_msg_int(2, "Error, failed malloc rt.\n", -1));
 	}
-	ft_bzero(scene, sizeof(t_scene));
-	if (rtv1_get_scene(scene, fd) < 0)
+	ft_bzero(rt, sizeof(t_rt));
+	if (rtv1_get_scene(rt, fd) < 0)
 	{
 		close(fd);
 		rtv1_free_scene(&scene);
