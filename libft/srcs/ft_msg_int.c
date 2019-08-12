@@ -15,6 +15,7 @@
 
 int	ft_msg_int(int fd, char *msg, int ret)
 {
-	write(fd, msg, ft_strlen(msg));
+	if (msg != NULL)
+		write(fd, msg, ft_strlen(msg));
 	return (ret);
 }

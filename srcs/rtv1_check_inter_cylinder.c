@@ -6,36 +6,44 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/02 11:58:36 by pmasson           #+#    #+#             */
-/*   Updated: 2019/07/11 13:10:40 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/08/12 15:36:21 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "libft.h"
 
-double	rtv1_check_inter_cylinder(t_obj *obj, t_ray *ray, int s)
+static void	rtv1_calc_terms_cyl(t_obj *obj, t_geo source, t_terms *term)
 {
-	t_terms	terms[1];
+	term->j = (obj->u.cylinder.center.y - source.pos.y) * obj->u.cylinder.axis.z
+		+ (source.pos.z - obj->u.cylinder.center.z) * obj->u.cylinder.axis.y;
+	term->l = (obj->u.cylinder.center.z - source.pos.z) * obj->u.cylinder.axis.x
+		+ (source.pos.x - obj->u.cylinder.center.x) * obj->u.cylinder.axis.z;
+	term->n = (obj->u.cylinder.center.x - source.pos.x) * obj->u.cylinder.axis.y
+		+ (source.pos.y - obj->u.cylinder.center.y) * obj->u.cylinder.axis.x;
+}
+
+double	rtv1_check_inter_cylinder(t_obj *obj, t_geo source)
+{
+	t_terms	term[1];
 	double	det;
 	double	a;
 	double	b;
 	double	c;
 
-	ft_bzero(terms, sizeof(t_terms));
-	terms->i = -ray->vec[1 + s] * obj->data[6] + ray->vec[2 + s] * obj->data[5];
-	terms->k = -ray->vec[2 + s] * obj->data[4] + ray->vec[0 + s] * obj->data[6];
-	terms->m = -ray->vec[0 + s] * obj->data[5] + ray->vec[1 + s] * obj->data[4];
-	terms->j = obj->data[1] * obj->data[6] - ray->source[1 + s] * obj->data[6]
-		- obj->data[2] * obj->data[5] + ray->source[2 + s] * obj->data[5];
-	terms->l = obj->data[2] * obj->data[4] - ray->source[2 + s] * obj->data[4]
-		- obj->data[0] * obj->data[6] + ray->source[0 + s] * obj->data[6];
-	terms->n = obj->data[0] * obj->data[5] - ray->source[0 + s] * obj->data[5]
-		- obj->data[1] * obj->data[4] + ray->source[1 + s] * obj->data[4];
-	if ((a = pow(terms->i, 2) + pow(terms->k, 2) + pow(terms->m, 2)) == 0)
+	ft_bzero(term, sizeof(t_terms));
+	term->i = -source.dir.y * obj->u.cylinder.axis.z
+		+ source.dir.z * obj->u.cylinder.axis.y;
+	term->k = -source.dir.z * obj->u.cylinder.axis.x
+		+ source.dir.x * obj->u.cylinder.axis.z;
+	term->m = -source.dir.x * obj->u.cylinder.axis.y
+		+ source.dir.y * obj->u.cylinder.axis.x;
+	if ((a = pow(term->i, 2) + pow(term->k, 2) + pow(term->m, 2)) == 0)
 		return (ft_msg_int(2, "Error calculating a in cylinder.", -1));
-	b = 2 * (terms->i * terms->j + terms->k * terms->l + terms->m * terms->n);
-	c = pow(terms->j, 2) + pow(terms->l, 2) + pow(terms->n, 2)
-			- pow((double)obj->data[3], 2);
+	rtv1_calc_terms_cyl(obj, source, term);
+	b = 2 * (term->i * term->j + term->k * term->l + term->m * term->n);
+	c = pow(term->j, 2) + pow(term->l, 2) + pow(term->n, 2)
+			- pow(obj->u.cylinder.radius, 2);
 	det = pow(b, 2) - 4 * a * c;
 	if (det < 0)
 		return (-1);

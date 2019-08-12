@@ -32,6 +32,7 @@ static int	rtv1_get_cam(t_rt *rt, char **nb, int *count, char *line)
 		ret = rtv1_atoi(nb[*count], &vec[*count]);
 		*count = *count + 1;
 	}
+	printf("u%f\n", vec[0]);
 	save->x = vec[0];
 	save->y = vec[1];
 	save->z = vec[2];
@@ -49,6 +50,7 @@ static int	rtv1_get_coord(t_rt *rt, char *line, int *step)
 	
 	count = 0;
 	ret = 1;
+	printf("str:%s\n", line);
 	if (ft_strncmp(line, "pos=", 4) != 0 && ft_strncmp(line, "rot=", 4) != 0)
 		return (ft_msg_int(2, "Error, problem in cam/light coord.\n", -1));
 	if (!(nb = ft_strsplit(line + 4, ',')))
@@ -63,19 +65,18 @@ static int	rtv1_get_coord(t_rt *rt, char *line, int *step)
 		return  (ft_msg_int(2, "Error, cam/light problem.\n", -1));
 	}
 	rtv1_free_tab(nb);
-	*step = 6;
 	return (0);
 }	
 
 static int	rtv1_manage_cls(t_rt *rt, char *line, int *step)
 {
-	if ((*step == 2 || *step == 6) && ft_strcmp(line, "camera") == 0)
+	if ((*step < 10) && ft_strcmp(line, "camera") == 0)
 		*step = 3;
-	else if ((*step == 2 || *step == 6) && ft_strcmp(line, "light") == 0)
+	else if ((*step < 10) && ft_strcmp(line, "light") == 0)
 		*step = 4;
 	else if (ft_strcmp(line, "objects") == 0)
 		*step = 10;
-	else if ((*step == 2 || *step == 6) && ft_strncmp(line, "shadows=", 8) == 0)
+	else if ((*step < 10) && ft_strncmp(line, "shadows=", 8) == 0)
 	{
 		rt->shadows = ft_strcmp(line + 8, "on") == 0 ? 1 : rt->shadows;
 		rt->shadows = ft_strcmp(line + 8, "yes") == 0 ? 1 : rt->shadows;
@@ -131,6 +132,7 @@ int	rtv1_get_scene(t_rt *rt, int fd)
 			free(line);
 			return (ft_msg_int(2, "Error, failed trim.\n", -1));
 		}
+		printf("tmp:%s\n", tmp);
 		if (tmp[0] != '}' && tmp[0] != '{')
 			end = rtv1_manage_line(rt, tmp, &step);
 		free(tmp);

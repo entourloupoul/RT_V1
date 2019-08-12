@@ -32,14 +32,14 @@ SRCS	:= \
 	rtv1_get_obj.c				\
 	rtv1_get_coord_obj.c		\
 	rtv1_set_cam_vec.c			\
-	rtv1_set_cam_vec2.c			\
 	rtv1_create_final.c			\
 	rtv1_get_color.c			\
 	rtv1_check_inter_sphere.c	\
 	rtv1_check_inter_plane.c	\
 	rtv1_get_shade.c			\
 	rtv1_check_inter_cylinder.c	\
-	rtv1_solve_2_deg.c
+	rtv1_solve_2_deg.c			\
+	rtv1_matrix.c
 
 SRCSDIR	:= ./srcs
 OBJSDIR	:= ./objs

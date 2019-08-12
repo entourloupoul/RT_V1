@@ -6,83 +6,68 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 18:56:40 by pmasson           #+#    #+#             */
-/*   Updated: 2019/07/24 14:00:55 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/08/12 19:02:44 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include <math.h>
 #include <stdio.h>
-static int	rtv1_check_plane_side(t_scene *scene, t_ray *ray, t_obj *obj)
+static int	rtv1_check_plane_side(t_rt *rt, t_obj *obj)
 {
 	double	a;
 	double	b;
 
-	(void)ray;
 	/* si return 1 la lumiere esr de l'autre cote du plan, sinon non*/
-	a = -obj->data[3] - obj->data[0] * scene->cam->coord[0]
-		- obj->data[1] * scene->cam->coord[1] - obj->data[2] * scene->cam->coord[2];
-	b = -obj->data[3] - obj->data[0] * scene->light->coord[0]
-		- obj->data[1] * scene->light->coord[1]
-		- obj->data[2] * scene->light->coord[2];
+	a = -obj->u.plane.constant - obj->u.plane.equation.x * rt->cam.pos.x
+		- obj->u.plane.equation.y * rt->cam.pos.y - obj->u.plane.equation.z
+		* rt->cam.pos.z;
+	b = -obj->u.plane.constant - obj->u.plane.equation.x * rt->lights->pos.x
+		- obj->u.plane.equation.y * rt->lights->pos.y
+		- obj->u.plane.equation.z * rt->lights->pos.z;
 	if ((a >= 0 && b >= 0) || (a <= 0 && b <= 0))
 		return (-1);
 	return (1);
 }
 
-static void	rtv1_shade_plane(t_scene *scene, t_obj *obj, t_ray *ray)
+static void	rtv1_shade_plane(t_rt *rt, t_obj *obj, t_ray *ray)
 {
-//	double	norm[3];
-//	double	length;
-
-	(void)scene;
-/*	norm[0] = obj->data[0];
-	norm[1] = obj->data[1];
-	norm[2] = obj->data[2];
-	length = sqrt(norm[0] * norm[0] + norm[1] * norm[1] + norm[2] * norm[2]);
-	if (length == 0)
-		return ;
-	norm[0] = norm[0] / length;
-	norm[1] = norm[1] / length;
-	norm[2] = norm[2] / length;
-*/	ray->shade = obj->norm[0] * ray->vec[3] + obj->norm[1] * ray->vec[4]
-		+ obj->norm[2] * ray->vec[5];
+	ray->shade = obj->u.plane.norm.x * ray->obj.dir.x + obj->u.plane.norm.y
+		* ray->obj.dir.y + obj->u.plane.norm.z * ray->obj.dir.z;
 	if (ray->shade <= 0)
 	{
-		if (rtv1_check_plane_side(scene, ray, obj) > 0)
-		{
-			//puts("kl");
+		if (rtv1_check_plane_side(rt, obj) > 0)
 			ray->shade = 0;
-		}
 		else
 		{
-			obj->norm[0] = -obj->norm[0];
-			obj->norm[1] = -obj->norm[1];
-			obj->norm[2] = -obj->norm[2];
-			ray->shade = obj->norm[0] * ray->vec[3] + obj->norm[1] * ray->vec[4]
-				+ obj->norm[2] * ray->vec[5];
+			obj->u.plane.norm.x = -obj->u.plane.norm.x;
+			obj->u.plane.norm.y = -obj->u.plane.norm.y;
+			obj->u.plane.norm.z = -obj->u.plane.norm.z;
+			ray->shade = obj->u.plane.norm.x * ray->obj.dir.x
+				+ obj->u.plane.norm.y * ray->obj.dir.y
+				+ obj->u.plane.norm.z * ray->obj.dir.z;
 		}
 	}
 	return;
 }
 
-static void	rtv1_shade_sphere(t_scene *scene, t_obj *obj, t_ray *ray)
+static void	rtv1_shade_sphere(t_obj *obj, t_ray *ray)
 {
-	double	norm[3];
+	t_fvec3d	norm;
 	double	length;
 
-	(void)scene;
-	norm[0] = -(double)obj->data[0] + ray->source[3];
-	norm[1] = -(double)obj->data[1] + ray->source[4];
-	norm[2] = -(double)obj->data[2] + ray->source[5];
-	length = sqrt(norm[0] * norm[0] + norm[1] * norm[1] + norm[2] * norm[2]);
+	norm.x = -obj->u.sphere.center.x + ray->obj.pos.x;
+	norm.y = -obj->u.sphere.center.y + ray->obj.pos.y;
+	norm.z = -obj->u.sphere.center.z + ray->obj.pos.z;
+	length = sqrt(norm.x * norm.x + norm.y * norm.y + norm.z * norm.z);
 	if (length == 0)
 		return ;
-	norm[0] = norm[0] / length;
-	norm[1] = norm[1] / length;
-	norm[2] = norm[2] / length;
-	ray->shade = norm[0] * ray->vec[3] + norm[1] * ray->vec[4]
-		+ norm[2] * ray->vec[5];
+	norm.x = norm.x / length;
+	norm.y = norm.y / length;
+	norm.z = norm.z / length;
+	ray->shade = norm.x * ray->obj.dir.x + norm.y * ray->obj.dir.y
+		+ norm.z * ray->obj.dir.z;
+	//printf("shade:%f\n", ray->shade);
 	if (ray->shade <= 0)
 		ray->shade = 0;
 }
@@ -91,51 +76,58 @@ static void	rtv1_shade_sphere(t_scene *scene, t_obj *obj, t_ray *ray)
 //on cherche le point c ten que ac perpendiculaire a bc (a point du ray, b centre du cyl)
 */
 
-static void	rtv1_shade_cylinder(t_scene *scene, t_obj *obj, t_ray *ray)
+static void	rtv1_shade_cylinder(t_obj *obj, t_ray *ray)
 {
-	double	norm[3];
+	t_fvec3d	norm;
 	double	length;
 	double	u;
 
-	(void)scene;
-	if ((u = sqrt(pow((double)obj->data[4], 2) + pow((double)obj->data[5], 2)
-					+ pow((double)obj->data[6], 2))) == 0)
+	if ((u = sqrt(pow(obj->u.cylinder.axis.x, 2)
+					+ pow(obj->u.cylinder.axis.y, 2)
+					+ pow(obj->u.cylinder.axis.z, 2))) == 0)
 		return ;
-	length = ((double)obj->data[4] * (ray->source[3] - (double)obj->data[0])
-			+ (double)obj->data[5] * (ray->source[4] - (double)obj->data[1])
-			+ (double)obj->data[6] * (ray->source[5] - (double)obj->data[2]))
-			/ u;
-	norm[0] = ray->source[3] - ((double)obj->data[0] + length * (double)obj->data[4]);
-	norm[1] = ray->source[4] - ((double)obj->data[1] + length * (double)obj->data[5]);
-	norm[2] = ray->source[5] - ((double)obj->data[2] + length * (double)obj->data[6]);
-	length = sqrt(norm[0] * norm[0] + norm[1] * norm[1] + norm[2] * norm[2]);
+	length = (obj->u.cylinder.axis.x * (ray->obj.pos.x
+			- obj->u.cylinder.center.x) + obj->u.cylinder.axis.y
+			* (ray->obj.pos.y - obj->u.cylinder.center.y)
+			+ obj->u.cylinder.axis.z * (ray->obj.pos.z
+			- obj->u.cylinder.center.z)) / u;
+	norm.x = ray->obj.pos.x - (obj->u.cylinder.center.x
+			+ length * obj->u.cylinder.axis.x);
+	norm.y = ray->obj.pos.y - (obj->u.cylinder.center.y
+			+ length * obj->u.cylinder.axis.y);
+	norm.z = ray->obj.pos.z - (obj->u.cylinder.center.z
+			+ length * obj->u.cylinder.axis.z);
+	length = sqrt(norm.x * norm.x + norm.y * norm.y + norm.z * norm.z);
 	if (length == 0)
 		return ;
-	norm[0] = norm[0] / length;
-	norm[1] = norm[1] / length;
-	norm[2] = norm[2] / length;
-	ray->shade = norm[0] * ray->vec[3] + norm[1] * ray->vec[4]
-		+ norm[2] * ray->vec[5];
+	norm.x = norm.x / length;
+	norm.y = norm.y / length;
+	norm.z = norm.z / length;
+	ray->shade = norm.x * ray->obj.dir.x + norm.y * ray->obj.dir.y
+		+ norm.z * ray->obj.dir.z;
 	if (ray->shade <= 0)
 		ray->shade = 0;
 }
 
 
-int	rtv1_get_shade(t_scene *scene, t_obj *obj, t_ray *ray, t_obj *save)
+int	rtv1_get_shade(t_rt *rt, t_obj *obj, t_ray *ray, t_obj *save)
 {
-	ray->ambient = 0.2;
-	if (obj->type == 2)
-		rtv1_shade_sphere(scene, obj, ray);
-	if (obj->type == 3)
-		rtv1_shade_cylinder(scene, obj, ray);
-	else if (obj->type == 1)
-		rtv1_shade_plane(scene, obj, ray);
-	if (ray->t >= 0)
+	if (obj == NULL)
+		return (1);
+	ray->ambient = AMBIENT;
+	//printf("amb:%f\n", ray->ambient);	
+	if (obj->type == PLANE)
+		rtv1_shade_plane(rt, obj, ray);
+	if (obj->type == SPHERE)
+		rtv1_shade_sphere(obj, ray);
+	if (obj->type == CYLINDER)
+		rtv1_shade_cylinder(obj, ray);
+	if (ray->dist >= 0)
 	{
 //		puts("ici0");
-		if (save->type == 1)
+		if (save->type == PLANE)
 		{
-			if (rtv1_check_plane_side(scene, ray, save) > 0)
+			if (rtv1_check_plane_side(rt, save) > 0)
 			{
 //				puts("coucou");
 				ray->shade = 0;
@@ -147,12 +139,12 @@ int	rtv1_get_shade(t_scene *scene, t_obj *obj, t_ray *ray, t_obj *save)
 			ray->shade = 0;
 		}
 	}
-	ray->color = ((int)round(((ray->color & 16711680) / 65536) * (ray->ambient
-		+ (1 - ray->ambient) * ray->shade) * 65536) & 16711680)
-		+ ((int)round(((ray->color & 65280) / 256) * (ray->ambient 
-		+ (1 - ray->ambient) * ray->shade) * 256) & 65280)
-		+ ((int)round((ray->color & 255) * (ray->ambient + (1 - ray->ambient)
-		* ray->shade)) & 255);
+	ray->color.p.r = (int8_t)round((double)ray->color.p.r
+				* (ray->ambient + (1 - ray->ambient) * ray->shade));
+	ray->color.p.g = (int8_t)round((double)ray->color.p.g
+				* (ray->ambient + (1 - ray->ambient) * ray->shade));
+	ray->color.p.b = (int8_t)round((double)ray->color.p.b
+				* (ray->ambient + (1 - ray->ambient) * ray->shade));
 	return (1);
 }
 

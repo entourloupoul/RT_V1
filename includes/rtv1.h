@@ -17,18 +17,18 @@
 # include <stdint.h>
 # include <stdbool.h>
 # include <stddef.h>
-
+# define AMBIENT 0.2
 typedef struct	s_color
 {
-	int8_t		a;
-	int8_t		b;
-	int8_t		g;
-	int8_t		r;
+	uint8_t		a;
+	uint8_t		b;
+	uint8_t		g;
+	uint8_t		r;
 }				t_color;
 
 typedef union	u_pixel
 {
-	int32_t		color;
+	uint32_t	color;
 	t_color		p;
 }				t_pixel;
 
@@ -142,7 +142,7 @@ typedef struct	s_cam
 	t_fvec3d	w;
 	double		screen_normal;
 	t_fvec2d	screen_ratio;
-	t_vec2d		px_screen_size;
+	t_fvec2d	px_screen_size;
 }				t_cam;
 
 typedef struct	s_sdl
@@ -181,17 +181,16 @@ int		rtv1_atoi(char *str, double *d);
 int		rtv1_get_light(t_rt *rt, char **nb, int *i, char *line);
 int		rtv1_get_obj(t_rt *rt, char *line);
 int		rtv1_get_coord_obj(t_obj *obj, char *line);
-/*
-** void	rtv1_free_scene(t_scene **scene);
-** int		rtv1_create_final(t_scene *scene);
-** int		rtv1_set_cam_vec(t_cam *cam);
-** int		rtv1_set_cam_vec2(t_cam *cam);
-** int		rtv1_get_color(t_scene *scene, t_ray *ray);
-** double	rtv1_check_inter_sphere(t_obj *obj, t_ray *ray, int s);
-** double	rtv1_check_inter_plane(t_obj *obj, t_ray *ray, int s);
-** vint		rtv1_get_shade(t_scene *scene, t_obj *obj, t_ray *ray, t_obj *save);
-** double	rtv1_solve_2_deg(double det, double a, double b);
-** double	rtv1_check_inter_cylinder(t_obj *obj, t_ray *ray, int s);
-*/
+void	rtv1_free_scene(t_rt **rt);
+int		rtv1_create_final(t_rt *rt);
+int		rtv1_set_cam_vec(t_cam *cam);
+int		rtv1_get_color(t_rt *rt, t_ray *ray);
+double	rtv1_check_inter_sphere(t_obj *obj, t_geo source);
+double	rtv1_check_inter_plane(t_obj *obj, t_geo source);
+int		rtv1_get_shade(t_rt *rt, t_obj *obj, t_ray *ray, t_obj *save);
+double	rtv1_solve_2_deg(double det, double a, double b);
+double	rtv1_check_inter_cylinder(t_obj *obj, t_geo source);
+void    create_rot_mat(double mat[3][3], double angle, char axis);
+void    dot_product_column_vec(t_fvec3d *r, double m1[3][3], t_fvec3d col);
 
 #endif

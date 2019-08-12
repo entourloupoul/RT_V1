@@ -6,126 +6,59 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 15:18:49 by pmasson           #+#    #+#             */
-/*   Updated: 2019/05/24 14:11:07 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/08/12 18:34:38 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <rtv1.h>
 #include <math.h>
 
-static int	rtv1_special_coord2(t_cam *cam)
+static int	rtv1_rot_cam(t_cam *cam)
 {
-	double	a;
+	double		mat[3][3];
 
-	if (cam->coord[1] == 1 || cam->coord[1] == -1)
+	if (cam->rot.x != 0)
 	{
-		a = cam->coord[1];
-		cam->u[0] = -a;
-		cam->v[2] = 1;
-		cam->w[1] = a;
-		return (1);
+		puts("yo");
+		create_rot_mat(mat, cam->rot.x * M_PI / 180, 'x');
+		dot_product_column_vec(&(cam->u), mat, cam->u);
+		dot_product_column_vec(&(cam->v), mat, cam->v);
+		dot_product_column_vec(&(cam->w), mat, cam->w);
 	}
-	if (cam->coord[2] == 1 || cam->coord[2] == -1)
+	if (cam->rot.y != 0)
 	{
-		a = cam->coord[2];
-		cam->u[0] = 1;
-		cam->v[1] = -a;
-		cam->w[2] = a;
-		return (1);
+		create_rot_mat(mat, cam->rot.y * M_PI / 180, 'y');
+		dot_product_column_vec(&(cam->u), mat, cam->u);
+		dot_product_column_vec(&(cam->v), mat, cam->v);
+		dot_product_column_vec(&(cam->w), mat, cam->w);
 	}
-	return (0);
-}
-
-static int	rtv1_special_coord(t_cam *cam)
-{
-	int	i;
-	double	a;
-
-	i = 0;
-	while (i < 3)
+	if (cam->rot.z != 0)
 	{
-			cam->u[i] = 0;
-			cam->v[i] = 0;
-			cam->w[i] = 0;
-			i++;
+		create_rot_mat(mat, cam->rot.z * M_PI / 180, 'z');
+		dot_product_column_vec(&(cam->u), mat, cam->u);
+		dot_product_column_vec(&(cam->v), mat, cam->v);
+		dot_product_column_vec(&(cam->w), mat, cam->w);
 	}
-	if (cam->coord[0] == 1 || cam->coord[0] == -1)
-	{
-		a = cam->coord[0];
-		cam->u[1] = a;
-		cam->v[2] = 1;
-		cam->w[0] = a;
-		return (1);
-	}
-	return (rtv1_special_coord2(cam));
-}
-
-static int		rtv1_get_w(t_cam *cam)
-{
-	double	norm;
-
-	norm = sqrt(pow(cam->coord[0], 2) + pow(cam->coord[1], 2)
-			+ pow(cam->coord[2], 2));
-	if (norm != 0)
-	{
-		cam->w[0] = cam->coord[0] / norm;
-		cam->w[1] = cam->coord[1] / norm;
-		cam->w[2] = cam->coord[2] / norm;
-		return (1);
-	}
-	else
-	{
-		cam->w[2] = 1;
-		cam->v[1] = 1;
-		cam->u[0] = 1;
-		return (0);
-	}
-}
-
-static int		rtv1_get_u(t_cam *cam)
-{
-	double	norm;
-
-	if (cam->w[0] == 0)
-	{
-		cam->u[0] = cam->w[1] >= 0 ? -1 : 1;
-		return (1);
-	}
-	cam->u[1] = cam->w[0] >= 0 ? -1 : 1;
-	if (cam->w[1] == 0)
-		return (1);
-	cam->u[0] = -cam->w[1] / cam->w[0] * cam->u[1];
-	norm = sqrt(pow(cam->u[0], 2) + pow(cam->u[1], 2));
-	cam->u[0] = cam->u[0] / norm;
-	cam->u[1] = cam->u[1] / norm;
 	return (1);
 }
 
 int		rtv1_set_cam_vec(t_cam *cam)
 {
-	if (!(cam->w = (double *)malloc(sizeof(double) * 3)))
+	cam->u.x = 1;
+	cam->u.y = 0;
+	cam->u.z = 0;
+	cam->v.x = 0;
+	cam->v.y = 1;
+	cam->v.z = 0;
+	cam->w.x = 0;
+	cam->w.y = 0;
+	cam->w.z = 1;
+	if (rtv1_rot_cam(cam) < 0)
 		return (-1);
-	if (!(cam->u = (double *)malloc(sizeof(double) * 3)))
-	{
-		free(cam->w);
-		cam->w = NULL;
-		return (-1);
-	}
-	if (!(cam->v = (double *)malloc(sizeof(double) * 3)))
-	{
-		free(cam->w);
-		cam->w = NULL;
-		free(cam->u);
-		cam->u = NULL;
-		return (-1);
-	}
-	if (rtv1_special_coord(cam) == 0)
-	{
-		if (rtv1_get_w(cam) == 1)
-		{
-			if (rtv1_get_u(cam) < 0 || rtv1_set_cam_vec2(cam) < 0)
-				return (-1);
-		}
-	}
+	printf("%f\n%f\n%f\n", cam->u.x, cam->u.y, cam->u.z);
+	printf("%f\n%f\n%f\n", cam->v.x, cam->v.y, cam->v.z);
+	printf("%f\n%f\n%f\n", cam->w.x, cam->w.y, cam->w.z);
+	printf("pos\n%f\n%f\n%f\n", cam->pos.x, cam->pos.y, cam->pos.z);
+	printf("rot\n%f\n%f\n%f\n", cam->rot.x, cam->rot.y, cam->rot.z);
 	return (1);
 }

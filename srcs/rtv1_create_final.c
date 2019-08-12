@@ -6,89 +6,92 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 16:30:17 by pmasson           #+#    #+#             */
-/*   Updated: 2019/07/24 13:46:42 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/08/12 19:02:47 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "libft.h"
 #include <math.h>
-static int	rtv1_set_fov(t_cam *cam)
-{
-	double	ratio;
 
-	if (cam->width <= 0 || cam->length <= 0)
-		return (ft_msg_int(2, "Error, width/length can't be 0 or less.\n", -1));
-	ratio = (double)cam->length / (double)cam->width;
-	cam->n = 1;
-	cam->l = 2 * tan(45 * M_PI / 180);
-	cam->r = cam->l / ratio;
-	return (1);
-}
-
-static int	rtv1_calc_surf2(t_scene *scene, t_cam *cam1, int x, int y, t_ray *ray)
+static int	rtv1_calc_surf2(t_rt *rt, double x, double y, t_ray *ray)
 {
-/*	ray->vec[0] = -cam1->w[0]
-		+ cam1->l * ((double)x / (double)cam1->length - 0.5) * cam1->u[0]
-		+ cam1->r * (0.5 - (double)y / (double)cam1->width) * cam1->v[0];
-	ray->vec[1] = -cam1->w[1]
-		+ cam1->l * ((double)x / (double)cam1->length - 0.5) * cam1->u[1]
-		+ cam1->r * (0.5 - (double)y / (double)cam1->width) * cam1->v[1];
-	ray->vec[2] = -cam1->w[2]
-		+ cam1->l * ((double)x / (double)cam1->length - 0.5) * cam1->u[2]
-		+ cam1->r * (0.5 - (double)y / (double)cam1->width) * cam1->v[2];
-*/	if (rtv1_get_color(scene, ray) <= 0)
+	if (rtv1_get_color(rt, ray) <= 0)
 		return (0);
-	*((unsigned int *)(scene->picture->surface->pixels
-				+ 4 * x + 4 * y * cam1->length)) = (unsigned int)ray->color;
+	*((unsigned int *)(rt->sdl.surface->pixels + 4 * (int)x + 4 * (int)y
+				* (int)rt->cam.px_screen_size.x)) = ray->color.color;
 	return (1);
 }
 
-static int	rtv1_calc_surf(t_scene *scene, t_cam *cam1)
+static void	rtv1_calc_ray_dir_y(t_ray *ray, t_rt *rt, double x, double y)
 {
-	int	x;
-	int	y;
+	ray->cam.dir.x = -rt->cam.w.x + rt->cam.screen_ratio.x
+		* (x / rt->cam.px_screen_size.x - 0.5) * rt->cam.u.x
+		+ rt->cam.screen_ratio.y * (0.5 - y / rt->cam.px_screen_size.y)
+		* rt->cam.v.x;
+	ray->cam.dir.y = -rt->cam.w.y + rt->cam.screen_ratio.x
+		* (x / rt->cam.px_screen_size.x - 0.5) * rt->cam.u.y
+		+ rt->cam.screen_ratio.y * (0.5 - y / rt->cam.px_screen_size.y)
+		* rt->cam.v.y;
+	ray->cam.dir.z = -rt->cam.w.z + rt->cam.screen_ratio.x
+		* (x / rt->cam.px_screen_size.x - 0.5) * rt->cam.u.z
+		+ rt->cam.screen_ratio.y * (0.5 - y / rt->cam.px_screen_size.y)
+		* rt->cam.v.z;
+}
+
+static void	rtv1_calc_ray_dir_x(t_ray *ray, t_rt *rt)
+{
+	ray->cam.dir.x = ray->cam.dir.x + rt->cam.screen_ratio.x
+		* (1 / rt->cam.px_screen_size.x) * rt->cam.u.x;
+	ray->cam.dir.y = ray->cam.dir.y + rt->cam.screen_ratio.x
+		* (1 / rt->cam.px_screen_size.x) * rt->cam.u.y;
+	ray->cam.dir.z = ray->cam.dir.z + rt->cam.screen_ratio.x
+		* (1 / rt->cam.px_screen_size.x) * rt->cam.u.z;
+}
+
+static int	rtv1_calc_surf(t_rt *rt)
+{
+	double	x;
+	double	y;
 	t_ray	ray[1];
 
 	ft_bzero(ray, sizeof(t_ray));
-	ray->source[0] = (double)scene->cam->coord[0];
-	ray->source[1] = (double)scene->cam->coord[1];
-	ray->source[2] = (double)scene->cam->coord[2];
+	ray->cam.pos.x = rt->cam.pos.x;
+	ray->cam.pos.y = rt->cam.pos.y;
+	ray->cam.pos.z = rt->cam.pos.z;
 	x = 0;
 	y = 0;
-	while (y < scene->cam->width)
+	while (y < rt->cam.px_screen_size.y)
 	{
 		x = 0;
-		ray->vec[0] = -cam1->w[0]
-			+ cam1->l * ((double)x / (double)cam1->length - 0.5) * cam1->u[0]
-			+ cam1->r * (0.5 - (double)y / (double)cam1->width) * cam1->v[0];
-		ray->vec[1] = -cam1->w[1]
-			+ cam1->l * ((double)x / (double)cam1->length - 0.5) * cam1->u[1]
-			+ cam1->r * (0.5 - (double)y / (double)cam1->width) * cam1->v[1];
-		ray->vec[2] = -cam1->w[2]
-			+ cam1->l * ((double)x / (double)cam1->length - 0.5) * cam1->u[2]
-			+ cam1->r * (0.5 - (double)y / (double)cam1->width) * cam1->v[2];
-		while (x < scene->cam->length)
+		rtv1_calc_ray_dir_y(ray, rt, x, y);
+		while (x < rt->cam.px_screen_size.x)
 		{
-			rtv1_calc_surf2(scene, scene->cam, x, y, ray);
-			ray->vec[0] = ray->vec[0] + cam1->l * ((double)1 / (double)cam1->length) * cam1->u[0];
-			ray->vec[1] = ray->vec[1] + cam1->l * ((double)1 / (double)cam1->length) * cam1->u[1];
-			ray->vec[2] = ray->vec[2] + cam1->l * ((double)1 / (double)cam1->length) * cam1->u[2];
-			x++;
+			rtv1_calc_surf2(rt, x, y, ray);
+			rtv1_calc_ray_dir_x(ray, rt);
+			x = x + 1;
 		}
-		y++;
+		y = y + 1;
 	}
 	return (0);
 }
 
 
-int	rtv1_create_final(t_scene *scene)
+int	rtv1_create_final(t_rt *rt)
 {
-	if (rtv1_set_cam_vec(scene->cam) < 0)
+	double	ratio;
+
+	rt->cam.px_screen_size.x = rt->sdl.size.x;
+	rt->cam.px_screen_size.y = rt->sdl.size.y;
+	if (rt->cam.px_screen_size.x <= 10 || rt->cam.px_screen_size.y <= 10)
+		return (ft_msg_int(2, "Error, width/length can't be 0 or less.\n", -1));
+	ratio = rt->cam.px_screen_size.x / rt->cam.px_screen_size.y;
+	rt->cam.screen_normal = 1;
+	rt->cam.screen_ratio.x = 2 * tan(45 * M_PI / 180);
+	rt->cam.screen_ratio.y = rt->cam.screen_ratio.x / ratio;
+	if (rtv1_set_cam_vec(&(rt->cam)) < 0)
 		return (-1);
-	if (rtv1_set_fov(scene->cam) < 0)
-		return (-1);
-	if (rtv1_calc_surf(scene, scene->cam) < 0)
+	if (rtv1_calc_surf(rt) < 0)
 		return (-1);
 	return (1);
 }

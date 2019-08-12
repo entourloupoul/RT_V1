@@ -24,7 +24,6 @@ void	rtv1_free_obj(t_obj **obj)
 		while (tmp != NULL)
 		{
 			free(tmp->name);
-			free(tmp->data);
 			prev = tmp;
 			tmp = tmp->next;
 			free(prev);
@@ -43,7 +42,6 @@ void	rtv1_free_light(t_light **light)
 		tmp = *light;
 		while (tmp != NULL)
 		{
-			free(tmp->coord);
 			prev = tmp;
 			tmp = tmp->next;
 			free(prev);
@@ -52,28 +50,15 @@ void	rtv1_free_light(t_light **light)
 	}
 }
 
-void	rtv1_free_cam(t_cam **cam)
+void	rtv1_free_scene(t_rt **rt)
 {
-	//free u v w
-	if (cam != NULL && *cam != NULL)
+	if (rt != NULL && *rt != NULL)
 	{
-		if ((*cam)->coord != NULL)
-			free((*cam)->coord);
-		free(*cam);
-		*cam = NULL;
-	}
-}
-
-void	rtv1_free_scene(t_scene **scene)
-{
-	if (scene != NULL && *scene != NULL)
-	{
-		rtv1_free_cam(&(*scene)->cam);
-		rtv1_free_light(&(*scene)->light);
-		rtv1_free_obj(&(*scene)->obj);
-		free((*scene)->name);
-		free(*scene);
-		*scene = NULL;
+		rtv1_free_light(&(*rt)->lights);
+		rtv1_free_obj(&(*rt)->objs);
+		free((*rt)->name);
+		free(*rt);
+		*rt = NULL;
 	}
 }
 
