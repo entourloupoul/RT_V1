@@ -6,7 +6,7 @@
 /*   By: pmasson <pmasson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 13:39:26 by pmasson           #+#    #+#             */
-/*   Updated: 2019/07/25 15:06:03 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/08/14 20:11:09 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,10 @@
 # define AMBIENT 0.2
 typedef struct	s_color
 {
-	uint8_t		a;
 	uint8_t		b;
 	uint8_t		g;
 	uint8_t		r;
+	uint8_t		a;
 }				t_color;
 
 typedef union	u_pixel
@@ -88,7 +88,10 @@ typedef struct	s_cone
 {
 	t_fvec3d	center;
 	t_fvec3d	axis;
-	double		phy;
+	double		angle;
+	double		mat_x[3][3];
+	double		mat_y[3][3];
+	double		mat_z[3][3];
 }				t_cone;
 
 typedef enum	e_obj_type
@@ -114,6 +117,8 @@ typedef struct	s_obj
 	t_pixel			color;
 	t_obj_type		type;
 	t_obj_union		u;
+	t_fvec3d		pos;
+	t_fvec3d		rot;
 	struct s_obj	*next;
 }				t_obj;
 
@@ -181,6 +186,7 @@ int		rtv1_atoi(char *str, double *d);
 int		rtv1_get_light(t_rt *rt, char **nb, int *i, char *line);
 int		rtv1_get_obj(t_rt *rt, char *line);
 int		rtv1_get_coord_obj(t_obj *obj, char *line);
+void	rtv1_calc_obj(t_rt *rt);
 void	rtv1_free_scene(t_rt **rt);
 int		rtv1_create_final(t_rt *rt);
 int		rtv1_set_cam_vec(t_cam *cam);
@@ -190,6 +196,7 @@ double	rtv1_check_inter_plane(t_obj *obj, t_geo source);
 int		rtv1_get_shade(t_rt *rt, t_obj *obj, t_ray *ray, t_obj *save);
 double	rtv1_solve_2_deg(double det, double a, double b);
 double	rtv1_check_inter_cylinder(t_obj *obj, t_geo source);
+double	rtv1_check_inter_cone(t_obj *obj, t_geo source);
 void    create_rot_mat(double mat[3][3], double angle, char axis);
 void    dot_product_column_vec(t_fvec3d *r, double m1[3][3], t_fvec3d col);
 

@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 15:18:49 by pmasson           #+#    #+#             */
-/*   Updated: 2019/08/12 18:34:38 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/08/14 18:36:29 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,11 @@ int		rtv1_set_cam_vec(t_cam *cam)
 	cam->u.y = 0;
 	cam->u.z = 0;
 	cam->v.x = 0;
-	cam->v.y = 1;
-	cam->v.z = 0;
+	cam->v.y = 0;
+	cam->v.z = 1;
 	cam->w.x = 0;
-	cam->w.y = 0;
-	cam->w.z = 1;
+	cam->w.y = -1;
+	cam->w.z = 0;
 	if (rtv1_rot_cam(cam) < 0)
 		return (-1);
 	printf("%f\n%f\n%f\n", cam->u.x, cam->u.y, cam->u.z);

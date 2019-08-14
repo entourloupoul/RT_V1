@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 09:23:14 by pmasson           #+#    #+#             */
-/*   Updated: 2019/07/25 15:18:17 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/08/14 19:32:09 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,12 +132,12 @@ int	rtv1_get_scene(t_rt *rt, int fd)
 			free(line);
 			return (ft_msg_int(2, "Error, failed trim.\n", -1));
 		}
-		printf("tmp:%s\n", tmp);
 		if (tmp[0] != '}' && tmp[0] != '{')
 			end = rtv1_manage_line(rt, tmp, &step);
 		free(tmp);
 		free(line);
 	}
+	rtv1_calc_obj(rt);
 	if (end < 0)
 		return (-1);
 	return (1);

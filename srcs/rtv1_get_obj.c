@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 13:27:16 by pmasson           #+#    #+#             */
-/*   Updated: 2019/07/25 15:42:42 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/08/14 18:36:26 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,8 +42,10 @@ static int	rtv1_fill_obj(t_obj *obj, char *line)
 		if (!(obj->name = ft_strdup(line + 5)))
 			return (ft_msg_int(2, "Error, name dup failed.\n", -1));
 	}
-	else if ((line[0] == 'c' || line[0] == 'r' || line[0] == 'e'
-				|| line[0] == 'a' || line[0] == 'p') && line[1] == '=')
+	else if (ft_strncmp(line, "rot=", 4) == 0
+			|| ft_strncmp(line, "pos=", 4) == 0
+			|| ft_strncmp(line, "radius=", 7) == 0
+			|| ft_strncmp(line, "angle=", 6) == 0)
 		return (rtv1_get_coord_obj(obj, line));
 	else if (ft_strcmp(line, "shining") == 0)
 		obj->is_shine = 1;

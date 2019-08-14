@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/24 15:23:15 by pmasson           #+#    #+#             */
-/*   Updated: 2019/08/12 19:02:46 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/08/14 19:31:34 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,8 @@ static double	rtv1_check_inter(t_obj *obj, t_geo source)
 		t = rtv1_check_inter_sphere(obj, source);
 	if (obj->type == CYLINDER)
 		t = rtv1_check_inter_cylinder(obj, source);
+	if (obj->type == CONE)
+		t = rtv1_check_inter_cone(obj, source);
 	return (t);
 }
 
@@ -56,6 +58,7 @@ static int	rtv1_get_color2(t_rt *rt, t_obj *obj,
 	t_obj	*tmp;
 	t_obj	*save;
 	double	ret;
+	double	light_dist;
 
 	if (t < 0)
 		return (0);
@@ -66,11 +69,14 @@ static int	rtv1_get_color2(t_rt *rt, t_obj *obj,
 	save = NULL;
 	t = -1;
 	tmp = rt->objs;
-	while (tmp != NULL && tmp->next != NULL)
+	light_dist = sqrt(pow(rt->lights->pos.x - ray->obj.pos.x, 2)
+				+ pow(rt->lights->pos.y - ray->obj.pos.y, 2)
+				+ pow(rt->lights->pos.z - ray->obj.pos.z, 2));
+	while (tmp != NULL)
 	{
 		if ((ret = rtv1_check_inter(tmp, ray->obj)) >= 0)
 		{
-			if (tmp != obj && (t < 0 || (t > 0 && ret < t)))
+			if (tmp != obj && (t < 0 || (t > 0 && ret < t)) && ret < light_dist)
 			{
 				t = ret;
 				save = tmp;

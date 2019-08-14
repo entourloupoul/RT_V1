@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/11 13:01:13 by pmasson           #+#    #+#             */
-/*   Updated: 2019/08/12 12:55:34 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/08/14 19:32:23 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ double   rtv1_solve_2_deg(double det, double a, double b)
 	double  t1;
 	double  t2;
 
+	if (a == 0)
+		return (-1);
 	if (det == 0)
 		return (-b / (2 * a));
 	else

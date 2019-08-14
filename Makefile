@@ -6,7 +6,7 @@
 #    By: pmasson <pmasson@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/07 18:54:45 by pmasson           #+#    #+#              #
-#    Updated: 2019/08/14 15:11:19 by pmasson          ###   ########.fr        #
+#    Updated: 2019/08/14 19:31:16 by pmasson          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,8 +38,10 @@ SRCS	:= \
 	rtv1_check_inter_plane.c	\
 	rtv1_get_shade.c			\
 	rtv1_check_inter_cylinder.c	\
+	rtv1_check_inter_cone.c		\
 	rtv1_solve_2_deg.c			\
-	rtv1_matrix.c
+	rtv1_matrix.c				\
+	rtv1_calc_obj.c
 
 SRCSDIR	:= ./srcs
 OBJSDIR	:= ./objs
