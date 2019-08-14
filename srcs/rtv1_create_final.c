@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 16:30:17 by pmasson           #+#    #+#             */
-/*   Updated: 2019/08/12 19:02:47 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/08/14 16:43:04 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static int	rtv1_calc_surf2(t_rt *rt, double x, double y, t_ray *ray)
 {
 	if (rtv1_get_color(rt, ray) <= 0)
 		return (0);
-	*((unsigned int *)(rt->sdl.surface->pixels + 4 * (int)x + 4 * (int)y
+	*((uint32_t *)(rt->sdl.surface->pixels + 4 * (int)x + 4 * (int)y
 				* (int)rt->cam.px_screen_size.x)) = ray->color.color;
 	return (1);
 }

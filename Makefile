@@ -6,7 +6,7 @@
 #    By: pmasson <pmasson@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/07 18:54:45 by pmasson           #+#    #+#              #
-#    Updated: 2019/07/24 17:39:32 by fstadelw         ###   ########.fr        #
+#    Updated: 2019/08/14 15:11:19 by pmasson          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -52,7 +52,7 @@ all: $(NAME)
 
 $(NAME): $(OBJS)
 	@$(MAKE) --no-print-directory -C libft/ > /dev/null
-	$(CC) $(LDFLAGS) $^ $(LIBFT) -o $@
+	$(CC) $(CPPFLAGS) $(LDFLAGS) $^ $(LIBFT) -o $@
 
 $(OBJSDIR)/%.o: $(SRCSDIR)/%.c includes/rtv1.h | $(OBJSDIR)
 	$(CC) -c $(CFLAGS) $(CPPFLAGS) -c $< -o $@

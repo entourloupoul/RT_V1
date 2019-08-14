@@ -6,22 +6,22 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/29 18:56:40 by pmasson           #+#    #+#             */
-/*   Updated: 2019/08/12 19:02:44 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/08/14 16:43:07 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include <math.h>
 #include <stdio.h>
-static int	rtv1_check_plane_side(t_rt *rt, t_obj *obj)
+static int	rtv1_check_plane_side(t_rt *rt, t_obj *obj, t_geo source)
 {
 	double	a;
 	double	b;
 
 	/* si return 1 la lumiere esr de l'autre cote du plan, sinon non*/
-	a = -obj->u.plane.constant - obj->u.plane.equation.x * rt->cam.pos.x
-		- obj->u.plane.equation.y * rt->cam.pos.y - obj->u.plane.equation.z
-		* rt->cam.pos.z;
+	a = -obj->u.plane.constant - obj->u.plane.equation.x * source.pos.x
+		- obj->u.plane.equation.y * source.pos.y - obj->u.plane.equation.z
+		* source.pos.z;
 	b = -obj->u.plane.constant - obj->u.plane.equation.x * rt->lights->pos.x
 		- obj->u.plane.equation.y * rt->lights->pos.y
 		- obj->u.plane.equation.z * rt->lights->pos.z;
@@ -36,18 +36,21 @@ static void	rtv1_shade_plane(t_rt *rt, t_obj *obj, t_ray *ray)
 		* ray->obj.dir.y + obj->u.plane.norm.z * ray->obj.dir.z;
 	if (ray->shade <= 0)
 	{
-		if (rtv1_check_plane_side(rt, obj) > 0)
+		if (rtv1_check_plane_side(rt, obj, ray->cam) > 0)
 			ray->shade = 0;
 		else
 		{
-			obj->u.plane.norm.x = -obj->u.plane.norm.x;
+	/*		obj->u.plane.norm.x = -obj->u.plane.norm.x;
 			obj->u.plane.norm.y = -obj->u.plane.norm.y;
 			obj->u.plane.norm.z = -obj->u.plane.norm.z;
 			ray->shade = obj->u.plane.norm.x * ray->obj.dir.x
 				+ obj->u.plane.norm.y * ray->obj.dir.y
-				+ obj->u.plane.norm.z * ray->obj.dir.z;
+				+ obj->u.plane.norm.z * ray->obj.dir.z;*/
+			ray->shade = -ray->shade;
 		}
 	}
+	//if (ray->shade ==0)
+	//	puts("yoooooo");
 	return;
 }
 
@@ -127,7 +130,7 @@ int	rtv1_get_shade(t_rt *rt, t_obj *obj, t_ray *ray, t_obj *save)
 //		puts("ici0");
 		if (save->type == PLANE)
 		{
-			if (rtv1_check_plane_side(rt, save) > 0)
+			if (rtv1_check_plane_side(rt, save, ray->obj) > 0)
 			{
 //				puts("coucou");
 				ray->shade = 0;
@@ -139,11 +142,11 @@ int	rtv1_get_shade(t_rt *rt, t_obj *obj, t_ray *ray, t_obj *save)
 			ray->shade = 0;
 		}
 	}
-	ray->color.p.r = (int8_t)round((double)ray->color.p.r
+	ray->color.p.r = (uint8_t)round(ray->color.p.r
 				* (ray->ambient + (1 - ray->ambient) * ray->shade));
-	ray->color.p.g = (int8_t)round((double)ray->color.p.g
+	ray->color.p.g = (uint8_t)round(ray->color.p.g
 				* (ray->ambient + (1 - ray->ambient) * ray->shade));
-	ray->color.p.b = (int8_t)round((double)ray->color.p.b
+	ray->color.p.b = (uint8_t)round(ray->color.p.b
 				* (ray->ambient + (1 - ray->ambient) * ray->shade));
 	return (1);
 }
