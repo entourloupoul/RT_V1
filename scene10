@@ -1,11 +1,10 @@
 scene
-name=test sphere plane
+name=ejwfiom
 camera
 pos=0,0,100
 light
-pos=0,0,100
+pos=0,100,-100
 objects
 plane
-name=plane1
-e=1,1,0,-40
+e=0,0,1,0
 color=0xFF0000

@@ -6,28 +6,12 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/24 15:23:15 by pmasson           #+#    #+#             */
-/*   Updated: 2019/08/14 19:31:34 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/04 15:39:26 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "libft.h"
-#include <stdio.h>
-static double	rtv1_check_inter(t_obj *obj, t_geo source)
-{
-	double t;
-
-	t = -1;
-	if (obj->type == PLANE)
-		t = rtv1_check_inter_plane(obj, source);
-	if (obj->type == SPHERE)
-		t = rtv1_check_inter_sphere(obj, source);
-	if (obj->type == CYLINDER)
-		t = rtv1_check_inter_cylinder(obj, source);
-	if (obj->type == CONE)
-		t = rtv1_check_inter_cone(obj, source);
-	return (t);
-}
 
 static int	rtv1_modif_ray(t_ray *ray, double t, t_light *light)
 {
@@ -52,43 +36,80 @@ static int	rtv1_modif_ray(t_ray *ray, double t, t_light *light)
 	return (1);
 }
 
-static int	rtv1_get_color2(t_rt *rt, t_obj *obj,
-		t_ray *ray, double t)
+static void	rtv1_calc_final_color(t_ray *ray)
 {
-	t_obj	*tmp;
+	if (ray->final_shade > 1)
+		ray->final_shade = 1;
+	ray->color.p.r = (uint8_t)round(ray->color.p.r
+			* (ray->ambient + (1 - ray->ambient) * ray->final_shade))
+			+ (255 - ray->color.p.r) * ray->coef_shine;
+	ray->color.p.g = (uint8_t)round(ray->color.p.g
+			* (ray->ambient + (1 - ray->ambient) * ray->final_shade))
+			+ (255 - ray->color.p.g) * ray->coef_shine;
+	ray->color.p.b = (uint8_t)round(ray->color.p.b
+			* (ray->ambient + (1 - ray->ambient) * ray->final_shade))
+			+ (255 - ray->color.p.b) * ray->coef_shine;
+}
+
+static void	rtv1_get_new_inter(t_rt *rt, t_obj *obj, t_light *nlight,
+		t_ray *ray)
+{
 	t_obj	*save;
+	t_obj	*tmp;
+	double	t2;
 	double	ret;
-	double	light_dist;
+
+	save = NULL;
+	t2 = -1;
+	tmp = rt->objs;
+	while (tmp != NULL)
+	{
+		if ((ret = rtv1_check_inter(tmp, ray->obj)) >= 0)
+		{
+			if (tmp != obj && (t2 < 0 || (t2 > 0 && ret < t2))
+					&& ret < nlight->dist)
+			{
+				t2 = ret;
+				save = tmp;
+			}
+		}
+		tmp = tmp->next;
+	}
+	ray->dist = t2;
+	rtv1_get_shade(nlight, obj, ray, save);
+	ray->final_shade += ray->shade;
+}
+
+static int	rtv1_get_color2(t_rt *rt, t_obj *obj, t_ray *ray, double t)
+{
+	t_light *nlight;
 
 	if (t < 0)
 		return (0);
 	ray->color.color = obj->color.color;
 	if (rt->lights == NULL)
 		return (1);
-	rtv1_modif_ray(ray, t, rt->lights);
-	save = NULL;
-	t = -1;
-	tmp = rt->objs;
-	light_dist = sqrt(pow(rt->lights->pos.x - ray->obj.pos.x, 2)
-				+ pow(rt->lights->pos.y - ray->obj.pos.y, 2)
-				+ pow(rt->lights->pos.z - ray->obj.pos.z, 2));
-	while (tmp != NULL)
+	nlight = rt->lights;
+	while (nlight != NULL)
 	{
-		if ((ret = rtv1_check_inter(tmp, ray->obj)) >= 0)
+		rtv1_modif_ray(ray, t, nlight);
+		nlight->dist = sqrt(pow(nlight->pos.x - ray->obj.pos.x, 2)
+				+ pow(nlight->pos.y - ray->obj.pos.y, 2)
+				+ pow(nlight->pos.z - ray->obj.pos.z, 2));
+		rtv1_get_new_inter(rt, obj, nlight, ray);
+		if (ray->shade >= 0.95 && obj->is_shine == 1)
 		{
-			if (tmp != obj && (t < 0 || (t > 0 && ret < t)) && ret < light_dist)
-			{
-				t = ret;
-				save = tmp;
-			}
+			ray->coef_shine += (ray->shade - 0.95) * 27;
+			if (ray->coef_shine > 1)
+				ray->coef_shine = 1;
 		}
-		tmp = tmp->next;
+		nlight = nlight->next;
 	}
-	ray->dist = t;
-	return (rtv1_get_shade(rt, obj, ray, save));
+	rtv1_calc_final_color(ray);
+	return (1);
 }
 
-int	rtv1_get_color(t_rt *rt, t_ray *ray)
+int			rtv1_get_color(t_rt *rt, t_ray *ray)
 {
 	t_obj	*tmp;
 	t_obj	*save;
@@ -98,6 +119,9 @@ int	rtv1_get_color(t_rt *rt, t_ray *ray)
 	t = -1;
 	save = NULL;
 	tmp = rt->objs;
+	ray->final_shade = 0;
+	ray->shade = 0;
+	ray->coef_shine = 0;
 	while (tmp != NULL)
 	{
 		if ((ret = rtv1_check_inter(tmp, ray->cam)) >= 0)

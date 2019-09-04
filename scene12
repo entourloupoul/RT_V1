@@ -1,0 +1,10 @@
+scene
+name=scene12
+camera
+pos=0,30,100
+light
+pos=0,30,0
+objects
+plane
+e=0,1,0,0
+color=0x0000FF

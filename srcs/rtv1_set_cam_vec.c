@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/14 15:18:49 by pmasson           #+#    #+#             */
-/*   Updated: 2019/08/14 18:36:29 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/04 14:49:53 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ static int	rtv1_rot_cam(t_cam *cam)
 	return (1);
 }
 
-int		rtv1_set_cam_vec(t_cam *cam)
+int			rtv1_set_cam_vec(t_cam *cam)
 {
 	cam->u.x = 1;
 	cam->u.y = 0;

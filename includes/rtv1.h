@@ -6,7 +6,7 @@
 /*   By: pmasson <pmasson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 13:39:26 by pmasson           #+#    #+#             */
-/*   Updated: 2019/08/14 20:11:09 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/04 16:28:05 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@
 # include <stdint.h>
 # include <stdbool.h>
 # include <stddef.h>
-# define AMBIENT 0.2
+# define AMBIENT 0.1
+
 typedef struct	s_color
 {
 	uint8_t		b;
@@ -61,6 +62,7 @@ typedef struct	s_fvec3d
 typedef struct	s_light
 {
 	t_fvec3d		pos;
+	double			dist;
 	struct s_light	*next;
 }				t_light;
 
@@ -82,6 +84,7 @@ typedef struct	s_cylinder
 	t_fvec3d	center;
 	t_fvec3d	axis;
 	double		radius;
+	t_plane		plane;
 }				t_cylinder;
 
 typedef struct	s_cone
@@ -89,6 +92,7 @@ typedef struct	s_cone
 	t_fvec3d	center;
 	t_fvec3d	axis;
 	double		angle;
+	t_plane		plane;
 	double		mat_x[3][3];
 	double		mat_y[3][3];
 	double		mat_z[3][3];
@@ -135,7 +139,10 @@ typedef struct	s_ray
 	double		dist;
 	double		ambient;
 	double		shade;
+	double		final_shade;
+	double		coef_shine;
 	t_pixel		color;
+	bool		shadows;
 }				t_ray;
 
 typedef struct	s_cam
@@ -179,25 +186,30 @@ typedef struct	s_terms
 	double		n;
 }				t_terms;
 
-
-int		rtv1_get_scene(t_rt *rt, int fd);
-void	rtv1_free_tab(char **tab);
-int		rtv1_atoi(char *str, double *d);
-int		rtv1_get_light(t_rt *rt, char **nb, int *i, char *line);
-int		rtv1_get_obj(t_rt *rt, char *line);
-int		rtv1_get_coord_obj(t_obj *obj, char *line);
-void	rtv1_calc_obj(t_rt *rt);
-void	rtv1_free_scene(t_rt **rt);
-int		rtv1_create_final(t_rt *rt);
-int		rtv1_set_cam_vec(t_cam *cam);
-int		rtv1_get_color(t_rt *rt, t_ray *ray);
-double	rtv1_check_inter_sphere(t_obj *obj, t_geo source);
-double	rtv1_check_inter_plane(t_obj *obj, t_geo source);
-int		rtv1_get_shade(t_rt *rt, t_obj *obj, t_ray *ray, t_obj *save);
-double	rtv1_solve_2_deg(double det, double a, double b);
-double	rtv1_check_inter_cylinder(t_obj *obj, t_geo source);
-double	rtv1_check_inter_cone(t_obj *obj, t_geo source);
-void    create_rot_mat(double mat[3][3], double angle, char axis);
-void    dot_product_column_vec(t_fvec3d *r, double m1[3][3], t_fvec3d col);
-
+int				rtv1_get_scene(t_rt *rt, int fd);
+void			rtv1_free_tab(char **tab);
+int				rtv1_atoi(char *str, double *d);
+int				rtv1_get_light(t_rt *rt, char **nb, int *i, char *line);
+int				rtv1_get_obj(t_rt *rt, char *line);
+int				rtv1_get_coord_obj(t_obj *obj, char *line);
+void			rtv1_calc_obj(t_rt *rt);
+void			rtv1_free_scene(t_rt **rt);
+int				rtv1_create_final(t_rt *rt);
+int				rtv1_set_cam_vec(t_cam *cam);
+int				rtv1_get_color(t_rt *rt, t_ray *ray);
+double			rtv1_check_inter_sphere(t_obj *obj, t_geo source);
+double			rtv1_check_inter_plane(t_obj *obj, t_geo source);
+int				rtv1_get_shade(t_light *light, t_obj *obj, t_ray *ray,
+					t_obj *save);
+double			rtv1_solve_2_deg(double det, double a, double b);
+double			rtv1_check_inter_cylinder(t_obj *obj, t_geo source);
+double			rtv1_check_inter_cone(t_obj *obj, t_geo source);
+void			create_rot_mat(double mat[3][3], double angle, char axis);
+void			dot_product_column_vec(t_fvec3d *r, double m1[3][3],
+					t_fvec3d col);
+int				rtv1_check_plane_side(t_fvec3d pointa, t_plane plane,
+					t_fvec3d pointb);
+void			rtv1_shade_cone(t_obj *obj, t_ray *ray);
+double			rtv1_check_inter(t_obj *obj, t_geo source);
+void			rtv1_shade_cylinder(t_obj *obj, t_ray *ray);
 #endif

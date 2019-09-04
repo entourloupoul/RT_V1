@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 09:23:14 by pmasson           #+#    #+#             */
-/*   Updated: 2019/08/14 19:32:09 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/04 14:46:12 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@
 
 static int	rtv1_get_cam(t_rt *rt, char **nb, int *count, char *line)
 {
-	int	ret;
+	int			ret;
 	double		vec[3];
 	t_fvec3d	*save;
 
 	ft_bzero(vec, sizeof(double) * 3);
-	if (ft_strncmp(line , "pos=", 4) == 0)
+	if (ft_strncmp(line, "pos=", 4) == 0)
 		save = &(rt->cam.pos);
 	else
 		save = &(rt->cam.rot);
@@ -41,13 +41,12 @@ static int	rtv1_get_cam(t_rt *rt, char **nb, int *count, char *line)
 	return (ret);
 }
 
-
 static int	rtv1_get_coord(t_rt *rt, char *line, int *step)
 {
 	char	**nb;
 	int		ret;
 	int		count;
-	
+
 	count = 0;
 	ret = 1;
 	printf("str:%s\n", line);
@@ -62,11 +61,11 @@ static int	rtv1_get_coord(t_rt *rt, char *line, int *step)
 	if ((count != 3 || (count == 3 && nb[count] != NULL)) || ret != 1)
 	{
 		rtv1_free_tab(nb);
-		return  (ft_msg_int(2, "Error, cam/light problem.\n", -1));
+		return (ft_msg_int(2, "Error, cam/light problem.\n", -1));
 	}
 	rtv1_free_tab(nb);
 	return (0);
-}	
+}
 
 static int	rtv1_manage_cls(t_rt *rt, char *line, int *step)
 {
@@ -92,7 +91,6 @@ static int	rtv1_manage_cls(t_rt *rt, char *line, int *step)
 	return (0);
 }
 
-
 static int	rtv1_manage_line(t_rt *rt, char *line, int *step)
 {
 	if (*step == 0 && ft_strcmp(line, "scene") != 0)
@@ -115,7 +113,7 @@ static int	rtv1_manage_line(t_rt *rt, char *line, int *step)
 	return (0);
 }
 
-int	rtv1_get_scene(t_rt *rt, int fd)
+int			rtv1_get_scene(t_rt *rt, int fd)
 {
 	char	*line;
 	char	*tmp;
@@ -125,6 +123,7 @@ int	rtv1_get_scene(t_rt *rt, int fd)
 	step = 0;
 	line = NULL;
 	end = 0;
+	rt->shadows = 1;
 	while (end == 0 && get_next_line(fd, &line) > 0)
 	{
 		if (!(tmp = ft_strtrim(line)))

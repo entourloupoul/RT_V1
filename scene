@@ -1,0 +1,15 @@
+scene
+name=scene11
+camera
+pos=0,0,100
+light
+pos=0,-21,50
+objects
+plane
+name=plane1
+e=0,0,1,0
+color=0xFF0000
+plane
+name=plane2
+e=0,1,0,20
+color=0x00FF00

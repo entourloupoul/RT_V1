@@ -6,7 +6,7 @@
 #    By: pmasson <pmasson@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/05/07 18:54:45 by pmasson           #+#    #+#              #
-#    Updated: 2019/08/14 19:31:16 by pmasson          ###   ########.fr        #
+#    Updated: 2019/09/04 16:24:41 by pmasson          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -26,7 +26,6 @@ SRCS	:= \
 	main.c						\
 	rtv1_atoi.c					\
 	rtv1_free.c					\
-	get_next_line.c				\
 	rtv1_get_scene.c			\
 	rtv1_get_light.c			\
 	rtv1_get_obj.c				\
@@ -41,7 +40,11 @@ SRCS	:= \
 	rtv1_check_inter_cone.c		\
 	rtv1_solve_2_deg.c			\
 	rtv1_matrix.c				\
-	rtv1_calc_obj.c
+	rtv1_calc_obj.c				\
+	rtv1_shade_cone.c			\
+	rtv1_check_inter.c			\
+	rtv1_check_plane_side.c		\
+	rtv1_shade_cylinder.c
 
 SRCSDIR	:= ./srcs
 OBJSDIR	:= ./objs

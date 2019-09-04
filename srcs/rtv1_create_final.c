@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 16:30:17 by pmasson           #+#    #+#             */
-/*   Updated: 2019/08/14 16:43:04 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/04 15:14:15 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,6 +59,7 @@ static int	rtv1_calc_surf(t_rt *rt)
 	ray->cam.pos.x = rt->cam.pos.x;
 	ray->cam.pos.y = rt->cam.pos.y;
 	ray->cam.pos.z = rt->cam.pos.z;
+	ray->shadows = rt->shadows;
 	x = 0;
 	y = 0;
 	while (y < rt->cam.px_screen_size.y)
@@ -69,6 +70,7 @@ static int	rtv1_calc_surf(t_rt *rt)
 		{
 			rtv1_calc_surf2(rt, x, y, ray);
 			rtv1_calc_ray_dir_x(ray, rt);
+			ray->shade = 0;
 			x = x + 1;
 		}
 		y = y + 1;
@@ -76,8 +78,7 @@ static int	rtv1_calc_surf(t_rt *rt)
 	return (0);
 }
 
-
-int	rtv1_create_final(t_rt *rt)
+int			rtv1_create_final(t_rt *rt)
 {
 	double	ratio;
 

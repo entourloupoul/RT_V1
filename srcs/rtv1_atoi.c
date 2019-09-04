@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/06 14:26:00 by pmasson           #+#    #+#             */
-/*   Updated: 2019/07/25 11:56:32 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/04 14:41:19 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,11 @@ int	rtv1_atoi(char *str, double *d)
 	i = ft_strlen(str) - 1;
 	while (i >= 0)
 	{
-		if (ft_isdigit(str[i]) == 0 && (i != 0 || (i == 0 && str[i] != '+' 
+		if (ft_isdigit(str[i]) == 0 && (i != 0 || (i == 0 && str[i] != '+'
 						&& str[i] != '-')))
 			return (0);
 		a = str[i] == '+' ? a : a + coeff * (str[i] - 48);
-		a = str[i] == '-' ? - (a - coeff * (str[i] - 48)) : a;
+		a = str[i] == '-' ? -(a - coeff * (str[i] - 48)) : a;
 		coeff = coeff * 10;
 		if (a > 2147483648 || (a == 2147483648 && str[0] != '-')\
 				|| coeff > 100000000000)

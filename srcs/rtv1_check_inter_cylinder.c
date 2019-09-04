@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/07/02 11:58:36 by pmasson           #+#    #+#             */
-/*   Updated: 2019/08/12 15:36:21 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/04 15:54:33 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	rtv1_calc_terms_cyl(t_obj *obj, t_geo source, t_terms *term)
 		+ (source.pos.y - obj->u.cylinder.center.y) * obj->u.cylinder.axis.x;
 }
 
-double	rtv1_check_inter_cylinder(t_obj *obj, t_geo source)
+double		rtv1_check_inter_cylinder(t_obj *obj, t_geo source)
 {
 	t_terms	term[1];
 	double	det;

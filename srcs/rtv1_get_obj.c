@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 13:27:16 by pmasson           #+#    #+#             */
-/*   Updated: 2019/08/14 18:36:26 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/04 14:47:34 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 static int	rtv1_get_color_obj(t_obj *obj, char *line)
 {
-	char	*color;
+	char		*color;
 	double		nb_color;
 
 	if (!(color = ft_convert_base("0123456789ABCDEF", "0123456789", line + 8)))
@@ -79,14 +79,13 @@ static void	rtv1_get_obj2(t_rt *rt, t_obj *new, char *line)
 	}
 }
 
-
-int		rtv1_get_obj(t_rt *rt, char *line)
+int			rtv1_get_obj(t_rt *rt, char *line)
 {
 	t_obj	*new;
 	t_obj	*tmp;
 
 	if (ft_strcmp(line, "plane") == 0 || ft_strcmp(line, "sphere") == 0
-			|| ft_strcmp(line, "cylinder") == 0 || ft_strcmp(line, "cone") == 0) 
+			|| ft_strcmp(line, "cylinder") == 0 || ft_strcmp(line, "cone") == 0)
 	{
 		if (!(new = (t_obj *)malloc(sizeof(t_obj) * 1)))
 			return (-1);

@@ -1,34 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   rtv1_solve_2_deg.c                                 :+:      :+:    :+:   */
+/*   rtv1_check_inter.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2019/07/11 13:01:13 by pmasson           #+#    #+#             */
-/*   Updated: 2019/09/04 14:50:31 by pmasson          ###   ########.fr       */
+/*   Created: 2019/09/04 15:20:03 by pmasson           #+#    #+#             */
+/*   Updated: 2019/09/04 16:17:00 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <math.h>
+#include "rtv1.h"
 
-double	rtv1_solve_2_deg(double det, double a, double b)
+double	rtv1_check_inter(t_obj *obj, t_geo source)
 {
-	double	t1;
-	double	t2;
+	double t;
 
-	if (a == 0)
-		return (-1);
-	if (det == 0)
-		return (-b / (2 * a));
-	else
-	{
-		t1 = (-b + sqrt(det)) / (2 * a);
-		t2 = (-b - sqrt(det)) / (2 * a);
-	}
-	if (t1 >= 0 && (t1 <= t2 || t2 < 0))
-		return (t1);
-	if (t2 >= 0 && (t2 <= t1 || t1 < 0))
-		return (t2);
-	return (-1);
+	t = -1;
+	if (obj->type == PLANE)
+		t = rtv1_check_inter_plane(obj, source);
+	if (obj->type == SPHERE)
+		t = rtv1_check_inter_sphere(obj, source);
+	if (obj->type == CYLINDER)
+		t = rtv1_check_inter_cylinder(obj, source);
+	if (obj->type == CONE)
+		t = rtv1_check_inter_cone(obj, source);
+	return (t);
 }

@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/24 16:03:41 by pmasson           #+#    #+#             */
-/*   Updated: 2019/08/12 12:54:17 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/04 15:55:04 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ double	rtv1_check_inter_sphere(t_obj *obj, t_geo source)
 	double	det;
 	double	t;
 
-	if ((a = source.dir.x * source.dir.x + source.dir.y * source.dir.y 
+	if ((a = source.dir.x * source.dir.x + source.dir.y * source.dir.y
 				+ source.dir.z * source.dir.z) == 0)
 		return (ft_msg_int(2, "Error calculating a in sphere.\n", -1));
 	b = 2 * (source.dir.x * (source.pos.x - obj->u.sphere.center.x)

@@ -6,13 +6,12 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/09 11:32:24 by pmasson           #+#    #+#             */
-/*   Updated: 2019/08/14 19:35:07 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/04 16:17:31 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 #include "rtv1.h"
-
 
 static int	rtv1_get_radius_angle_value(t_obj *obj, char **nb, char *line)
 {
@@ -64,7 +63,7 @@ static int	rtv1_get_rot_pos_coord(t_obj *obj, char **nb, char *line)
 	return (1);
 }
 
-int	rtv1_get_coord_obj(t_obj *obj, char *line)
+int			rtv1_get_coord_obj(t_obj *obj, char *line)
 {
 	char	**nb;
 	int		ret;

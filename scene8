@@ -1,0 +1,24 @@
+scene
+{
+	name=scene5
+	camera
+	{
+		pos=0,100,0
+		rot=-90,0,0
+	}
+	light
+	{
+		pos=0,0,100
+	}
+	shadows=off
+}
+objects
+{
+	sphere
+	{
+		name=s1
+		c=0,0,0
+		r=10
+		color=0xFF0000
+	}
+}

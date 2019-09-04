@@ -1,0 +1,13 @@
+scene
+name=fvwevefr
+camera
+pos=0,-200,0
+rot=0,0,0
+light
+pos=100,0,0
+objects
+cone
+rot=0,15,0
+pos=0,0,0
+angle=20
+color=0xFFFFFF
