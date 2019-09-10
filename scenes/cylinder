@@ -1,0 +1,23 @@
+scene
+{
+	name=cylinder
+	camera
+	{
+		pos=0,-100,50
+		rot=-15,0,0
+	}
+	light
+	{
+		pos=50,0,100
+	}
+}
+objects
+{
+	cylinder
+	{
+		pos=0,0,0
+		rot=0,0,0
+		radius=20
+		color=0x00FFFF
+	}
+}

@@ -1,0 +1,22 @@
+scene
+{
+	name=plane
+	camera
+	{
+		pos=0,-100,50
+		rot=-15,0,0
+	}
+	light
+	{
+		pos=0,0,100
+	}
+}
+objects
+{
+	plane
+	{
+		pos=0,0,0
+		rot=0,0,0
+		color=0xFF0000
+	}
+}

@@ -1,0 +1,41 @@
+scene
+{
+	name=all_no_shadows
+	camera
+	{
+		pos=0,-100,100
+		rot=-15,0,0
+	}
+	light
+	{
+		pos=100,-50,50
+	}
+	shadows=off
+}
+objects
+{
+	plane
+	{
+		color=0xFF0000
+	}
+	sphere
+	{
+		pos=0,30,5
+		color=0x00FF00
+		radius=20
+	}
+	cylinder
+	{
+		radius=20
+		rot=-30,25,0
+		pos=-10,40,0
+		color=0xA09C0F
+	}
+	cone
+	{
+		angle=5
+		rot=10,10,0
+		pos=50,50,30
+		color=0xF78A06
+	}
+}

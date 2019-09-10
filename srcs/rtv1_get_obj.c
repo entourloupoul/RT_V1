@@ -51,7 +51,11 @@ static int	rtv1_fill_obj(t_obj *obj, char *line)
 	else if (ft_strncmp(line, "color=0x", 8) == 0)
 		return (rtv1_get_color_obj(obj, line));
 	else
+	{
+		if (line != NULL)
+			ft_putstr_fd(line, 2);
 		return (ft_msg_int(2, "Error, wrong term in objs.\n", -1));
+	}
 	return (1);
 }
 

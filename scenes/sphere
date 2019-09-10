@@ -1,0 +1,23 @@
+scene
+{
+	name=sphere
+	camera
+	{
+		pos=0,-100,50
+		rot=-15,0,0
+	}
+	light
+	{
+		pos=50,0,100
+	}
+}
+objects
+{
+	sphere
+	{
+		pos=0,0,0
+		rot=0,0,0
+		radius=20
+		color=0x0F00F0
+	}
+}

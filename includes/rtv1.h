@@ -15,7 +15,7 @@
 
 # include <SDL2/SDL.h>
 # include <stdbool.h>
-# define AMBIENT 0.1
+# define AMBIENT 0.2
 
 typedef struct	s_color
 {

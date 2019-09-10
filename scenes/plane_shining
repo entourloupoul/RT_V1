@@ -1,0 +1,23 @@
+scene
+{
+	name=plane_shining
+	camera
+	{
+		pos=0,-100,50
+		rot=-15,0,0
+	}
+	light
+	{
+		pos=0,0,50
+	}
+}
+objects
+{
+	plane
+	{
+		pos=0,0,0
+		rot=0,0,0
+		color=0xFF0000
+		shining
+	}
+}

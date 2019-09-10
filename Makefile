@@ -73,6 +73,7 @@ test: $(NAME)
 
 clean:
 	rm -Rf $(OBJS)
+	rm -Rf $(OBJSDIR)
 	@$(MAKE) --no-print-directory -C libft/ clean
 
 fclean: clean

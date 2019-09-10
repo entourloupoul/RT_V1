@@ -1,0 +1,23 @@
+scene
+{
+	name=cone
+	camera
+	{
+		pos=0,-100,50
+		rot=-15,0,0
+	}
+	light
+	{
+		pos=50,0,100
+	}
+}
+objects
+{
+	cone
+	{
+		pos=0,0,0
+		rot=0,0,0
+		angle=15
+		color=0xFA3462
+	}
+}

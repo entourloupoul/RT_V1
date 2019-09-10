@@ -1,0 +1,24 @@
+scene
+{
+	name=sphere_shining
+	camera
+	{
+		pos=0,-100,50
+		rot=-15,0,0
+	}
+	light
+	{
+		pos=50,-30,50
+	}
+}
+objects
+{
+	sphere
+	{
+		pos=0,0,0
+		rot=0,0,0
+		radius=20
+		shining
+		color=0x0F00F0
+	}
+}
