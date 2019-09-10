@@ -6,7 +6,7 @@
 /*   By: pmasson <pmasson@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 13:39:26 by pmasson           #+#    #+#             */
-/*   Updated: 2019/09/04 16:28:05 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/10 14:13:32 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,7 @@
 # define RTV1_H
 
 # include <SDL2/SDL.h>
-# include <stdint.h>
 # include <stdbool.h>
-# include <stddef.h>
 # define AMBIENT 0.1
 
 typedef struct	s_color

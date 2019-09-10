@@ -6,13 +6,12 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/16 16:30:17 by pmasson           #+#    #+#             */
-/*   Updated: 2019/09/04 15:14:15 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/10 14:06:46 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "libft.h"
-#include <math.h>
 
 static int	rtv1_calc_surf2(t_rt *rt, double x, double y, t_ray *ray)
 {

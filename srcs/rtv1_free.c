@@ -6,12 +6,11 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/06 14:17:25 by pmasson           #+#    #+#             */
-/*   Updated: 2019/09/04 14:49:30 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/10 14:07:46 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
-#include <stdlib.h>
 
 void	rtv1_free_obj(t_obj **obj)
 {

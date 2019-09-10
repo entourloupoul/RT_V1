@@ -6,13 +6,12 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 09:23:14 by pmasson           #+#    #+#             */
-/*   Updated: 2019/09/04 14:46:12 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/10 14:10:43 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <rtv1.h>
 #include "libft.h"
-#include <stdlib.h>
 #include "get_next_line.h"
 
 static int	rtv1_get_cam(t_rt *rt, char **nb, int *count, char *line)
@@ -32,7 +31,6 @@ static int	rtv1_get_cam(t_rt *rt, char **nb, int *count, char *line)
 		ret = rtv1_atoi(nb[*count], &vec[*count]);
 		*count = *count + 1;
 	}
-	printf("u%f\n", vec[0]);
 	save->x = vec[0];
 	save->y = vec[1];
 	save->z = vec[2];
@@ -49,7 +47,6 @@ static int	rtv1_get_coord(t_rt *rt, char *line, int *step)
 
 	count = 0;
 	ret = 1;
-	printf("str:%s\n", line);
 	if (ft_strncmp(line, "pos=", 4) != 0 && ft_strncmp(line, "rot=", 4) != 0)
 		return (ft_msg_int(2, "Error, problem in cam/light coord.\n", -1));
 	if (!(nb = ft_strsplit(line + 4, ',')))

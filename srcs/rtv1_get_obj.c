@@ -6,13 +6,12 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 13:27:16 by pmasson           #+#    #+#             */
-/*   Updated: 2019/09/04 14:47:34 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/10 14:09:35 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
 #include "libft.h"
-#include <stdlib.h>
 
 static int	rtv1_get_color_obj(t_obj *obj, char *line)
 {

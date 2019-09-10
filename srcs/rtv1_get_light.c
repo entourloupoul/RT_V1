@@ -6,12 +6,11 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/07 13:04:17 by pmasson           #+#    #+#             */
-/*   Updated: 2019/09/04 14:47:58 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/10 14:09:05 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
-#include <stdlib.h>
 #include "libft.h"
 
 static void	rtv1_light_lst(t_rt *rt, t_light *new)

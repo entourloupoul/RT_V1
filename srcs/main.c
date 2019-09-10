@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 13:40:40 by pmasson           #+#    #+#             */
-/*   Updated: 2019/09/04 14:40:26 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/10 14:04:35 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #include "libft.h"
 #include <fcntl.h>
 #include <unistd.h>
-#include <SDL2/SDL.h>
 
 static int	rtv1_create_window(t_rt *rt, t_sdl *sdl)
 {
@@ -47,16 +46,12 @@ static int	rtv1_quit_video(t_rt *rt, char *str, int ret)
 {
 	if (str != NULL)
 		ft_putstr_fd(str, 2);
-	puts("10");
 	if (rt->sdl.window != NULL)
 		SDL_DestroyWindow(rt->sdl.window);
-	puts("11");
 	if (rt->sdl.renderer != NULL)
 		SDL_DestroyRenderer(rt->sdl.renderer);
-	puts("12");
 	if (rt->sdl.texture != NULL)
 		SDL_DestroyTexture(rt->sdl.texture);
-	puts("13");
 	if (rt->sdl.surface != NULL)
 		SDL_FreeSurface(rt->sdl.surface);
 	SDL_Quit();
@@ -68,14 +63,11 @@ static int	rtv1_put_on_screen(t_rt *rt)
 	int			running;
 	SDL_Event	event;
 
-	puts("fgdtera");
 	if (!(rt->sdl.texture = SDL_CreateTextureFromSurface(rt->sdl.renderer,
 					rt->sdl.surface)))
 		return (rtv1_quit_video(rt, (char *)SDL_GetError(), -1));
-	puts("coco");
 	if (SDL_RenderCopy(rt->sdl.renderer, rt->sdl.texture, NULL, NULL) < 0)
 		return (rtv1_quit_video(rt, "Error, render copy\n", -1));
-	puts("jhyui");
 	SDL_RenderPresent(rt->sdl.renderer);
 	running = 1;
 	while (running == 1)

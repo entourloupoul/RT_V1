@@ -6,7 +6,7 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/09/03 09:56:38 by pmasson           #+#    #+#             */
-/*   Updated: 2019/09/04 16:23:21 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/10 14:11:37 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,10 +46,7 @@ void		rtv1_shade_cone(t_obj *obj, t_ray *ray)
 	norm.z = ray->obj.pos.z - proj.z;
 	length = sqrt(norm.x * norm.x + norm.y * norm.y + norm.z * norm.z);
 	if (length == 0)
-	{
-		puts("jkilo");
 		return ;
-	}
 	norm.x = norm.x / length;
 	norm.y = norm.y / length;
 	norm.z = norm.z / length;

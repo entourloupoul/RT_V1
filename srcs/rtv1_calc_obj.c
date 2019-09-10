@@ -6,12 +6,11 @@
 /*   By: pmasson <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/08/14 17:49:15 by pmasson           #+#    #+#             */
-/*   Updated: 2019/09/04 16:23:23 by pmasson          ###   ########.fr       */
+/*   Updated: 2019/09/10 14:05:22 by pmasson          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "rtv1.h"
-#include <math.h>
 
 static void	rtv1_calc_axis(t_obj *obj, t_fvec3d *axis)
 {
